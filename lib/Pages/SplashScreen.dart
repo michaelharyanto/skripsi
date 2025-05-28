@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:skripsi/Controllers/DatabaseController.dart';
+import 'package:skripsi/Pages/HomePage.dart';
 import 'package:skripsi/Pages/LoginPage.dart';
 import 'package:skripsi/Widgets/MainLinearGradient.dart';
 
@@ -17,8 +19,10 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Future.delayed(
       Duration(milliseconds: 500),
-      () {
-        Get.off(LoginPage());
+      () async {
+        int? status;
+        status = await DatabaseController().getStatus();
+        Get.off(status == 0 ? HomePage() : LoginPage());
       },
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:skripsi/Controllers/LoginPageController.dart';
 import 'package:skripsi/Pages/HomePage.dart';
 import 'package:skripsi/Widgets/MainLinearGradient.dart';
 
@@ -14,6 +15,9 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   RxBool passVisible = false.obs;
+  LoginPageController l = Get.put(LoginPageController());
+  TextEditingController emailTF = TextEditingController();
+  TextEditingController passTF = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             'Login',
                             style: TextStyle(
                                 fontSize: 25,
@@ -51,41 +55,44 @@ class _LoginPageState extends State<LoginPage> {
                                 fontFamily: 'Poppins',
                                 fontWeight: FontWeight.w700),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 8,
                           ),
-                          Text(
-                            'Email / No. Telp',
+                          const Text(
+                            'Email',
                             style: TextStyle(
                                 fontSize: 15,
                                 color: Colors.black,
                                 fontFamily: 'Poppins',
                                 fontWeight: FontWeight.w500),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 4,
                           ),
                           TextFormField(
+                            controller: emailTF,
+                            style: TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.w500),
                             decoration: InputDecoration(
                               contentPadding:
-                                  EdgeInsets.symmetric(horizontal: 10),
+                                  const EdgeInsets.symmetric(horizontal: 10),
                               errorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
-                                  borderSide: BorderSide(color: Colors.red)),
+                                  borderSide:
+                                      const BorderSide(color: Colors.red)),
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
                                   borderSide: BorderSide(
                                       color: Theme.of(context).primaryColor)),
                               enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
-                                  borderSide:
-                                      BorderSide(color: Color(0xFFD9D9D9))),
+                                  borderSide: const BorderSide(
+                                      color: Color(0xFFD9D9D9))),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 16,
                           ),
-                          Text(
+                          const Text(
                             'Password',
                             style: TextStyle(
                                 fontSize: 15,
@@ -93,10 +100,12 @@ class _LoginPageState extends State<LoginPage> {
                                 fontFamily: 'Poppins',
                                 fontWeight: FontWeight.w500),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 4,
                           ),
                           Obx(() => TextFormField(
+                                controller: passTF,
+                                style: TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.w500),
                                 obscureText: !passVisible.value,
                                 decoration: InputDecoration(
                                   suffixIcon: InkWell(
@@ -110,12 +119,12 @@ class _LoginPageState extends State<LoginPage> {
                                       color: Colors.grey,
                                     ),
                                   ),
-                                  contentPadding:
-                                      EdgeInsets.symmetric(horizontal: 10),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
                                   errorBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(8),
                                       borderSide:
-                                          BorderSide(color: Colors.red)),
+                                          const BorderSide(color: Colors.red)),
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(8),
                                       borderSide: BorderSide(
@@ -123,26 +132,28 @@ class _LoginPageState extends State<LoginPage> {
                                               Theme.of(context).primaryColor)),
                                   enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(8),
-                                      borderSide:
-                                          BorderSide(color: Color(0xFFD9D9D9))),
+                                      borderSide: const BorderSide(
+                                          color: Color(0xFFD9D9D9))),
                                 ),
                               )),
-                          SizedBox(
+                          const SizedBox(
                             height: 40,
                           ),
                           InkWell(
                             onTap: () {
-                              Get.offAll(HomePage());
+                              l.onLoginTapped(
+                                  emailTF.text, passTF.text, context);
+                              // Get.offAll(const HomePage());
                             },
                             child: Container(
                               width: Get.width,
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                 vertical: 8,
                               ),
                               decoration: BoxDecoration(
                                   color: Theme.of(context).primaryColor,
                                   borderRadius: BorderRadius.circular(8)),
-                              child: Center(
+                              child: const Center(
                                 child: Text(
                                   'Masuk',
                                   style: TextStyle(
@@ -167,10 +178,10 @@ class _LoginPageState extends State<LoginPage> {
                 60 -
                 (MediaQuery.of(context).viewInsets.bottom * 0.4),
             width: Get.width,
-            child: Column(
+            child: const Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const FlutterLogo(
+                FlutterLogo(
                   size: 100,
                 ),
                 Text(
