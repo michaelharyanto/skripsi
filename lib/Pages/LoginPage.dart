@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:skripsi/Controllers/LoginPageController.dart';
-import 'package:skripsi/Pages/HomePage.dart';
 import 'package:skripsi/Widgets/MainLinearGradient.dart';
 
 class LoginPage extends StatefulWidget {
@@ -71,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           TextFormField(
                             controller: emailTF,
-                            style: TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.w500),
+                            style: const TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.w500),
                             decoration: InputDecoration(
                               contentPadding:
                                   const EdgeInsets.symmetric(horizontal: 10),
@@ -105,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           Obx(() => TextFormField(
                                 controller: passTF,
-                                style: TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.w500),
+                                style: const TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.w500),
                                 obscureText: !passVisible.value,
                                 decoration: InputDecoration(
                                   suffixIcon: InkWell(

@@ -2,6 +2,7 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:skripsi/Controllers/HomePageController.dart';
 import 'package:skripsi/Fragments/ChatroomListFragment.dart';
 import 'package:skripsi/Fragments/HistoryFragment.dart';
 import 'package:skripsi/Fragments/HomeFragment.dart';
@@ -17,6 +18,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  HomePageController h = Get.put(HomePageController());
   PageStorageBucket bucket = PageStorageBucket();
   List<Widget> fragments = [
     const HomeFragment(),
@@ -26,8 +28,16 @@ class _HomePageState extends State<HomePage> {
     const ProfileFragment()
   ];
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    h.getCarrousel();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+        extendBody: false,
         body: Obx(() => PageStorage(
             bucket: bucket,
             child: fragments[GlobalVar.currentNavBarIndex.value])),
@@ -51,7 +61,8 @@ class _HomePageState extends State<HomePage> {
                           Icons.home,
                           color: Theme.of(context).primaryColor,
                         ),
-                        title: 'Beranda'),
+                        title: 'Beranda',
+                        fontFamily: 'Poppins'),
                     TabItem(
                         icon: const Icon(
                           Icons.assignment,
@@ -61,7 +72,8 @@ class _HomePageState extends State<HomePage> {
                           Icons.assignment,
                           color: Theme.of(context).primaryColor,
                         ),
-                        title: 'Pesan'),
+                        title: 'Pesan',
+                        fontFamily: 'Poppins'),
                     TabItem(
                         icon: const Icon(
                           Icons.history,
@@ -71,7 +83,8 @@ class _HomePageState extends State<HomePage> {
                           Icons.history,
                           color: Theme.of(context).primaryColor,
                         ),
-                        title: 'Riwayat'),
+                        title: 'Riwayat',
+                        fontFamily: 'Poppins'),
                     TabItem(
                         icon: Icon(
                           MdiIcons.heart,
@@ -81,7 +94,8 @@ class _HomePageState extends State<HomePage> {
                           MdiIcons.heart,
                           color: Theme.of(context).primaryColor,
                         ),
-                        title: 'Wishlist'),
+                        title: 'Wishlist',
+                        fontFamily: 'Poppins'),
                     TabItem(
                         icon: const Icon(
                           Icons.person,
@@ -91,7 +105,8 @@ class _HomePageState extends State<HomePage> {
                           Icons.person,
                           color: Theme.of(context).primaryColor,
                         ),
-                        title: 'Profil'),
+                        title: 'Profil',
+                        fontFamily: 'Poppins'),
                   ])),
         ));
   }

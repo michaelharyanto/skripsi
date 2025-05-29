@@ -5,6 +5,8 @@ import 'package:skripsi/Data%20Model/user.dart';
 
 class GlobalVar extends GetxController {
   static RxInt currentNavBarIndex = 0.obs;
+  static String carouselLink = ''; 
+  static String carouselToken = ''; 
   static final GlobalKey<ConvexAppBarState> appBarKey =
       GlobalKey<ConvexAppBarState>();
   static user currentUser = user(
