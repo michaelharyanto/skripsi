@@ -1,10 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:skripsi/Data%20Model/menu.dart';
+import 'package:skripsi/GlobalVar.dart';
 
 class MenuDetailPageController extends GetxController {
   showBuyModal(BuildContext context, menu menu) {
@@ -61,61 +64,59 @@ class MenuDetailPageController extends GetxController {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              height: 90,
-                              width: 90,
-                              child: CachedNetworkImage(
-                                  imageUrl: menu.menu_image!),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Expanded(
-                                child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  menu.menu_name!,
-                                  style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 14,
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.w700),
-                                ),
-                                SizedBox(
-                                  height: 4,
-                                ),
-                                Text(
-                                  'Stok: ${menu.menu_stock}',
-                                  style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 14,
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                SizedBox(
-                                  height: 4,
-                                ),
-                                Text(
-                                  NumberFormat.currency(
-                                          locale: 'id_ID',
-                                          decimalDigits: 0,
-                                          symbol: 'Rp')
-                                      .format(menu.menu_price),
-                                  style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 14,
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ],
-                            ))
-                          ],
-                        ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 90,
+                            width: 90,
+                            child:
+                                CachedNetworkImage(imageUrl: menu.menu_image!),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(
+                              child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                menu.menu_name!,
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w700),
+                              ),
+                              const SizedBox(
+                                height: 4,
+                              ),
+                              Text(
+                                'Stok: ${menu.menu_stock}',
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              const SizedBox(
+                                height: 4,
+                              ),
+                              Text(
+                                NumberFormat.currency(
+                                        locale: 'id_ID',
+                                        decimalDigits: 0,
+                                        symbol: 'Rp')
+                                    .format(menu.menu_price),
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ))
+                        ],
                       ),
                       const SizedBox(
                         height: 16,
@@ -219,8 +220,10 @@ class MenuDetailPageController extends GetxController {
                 ),
               ),
               Container(
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                decoration:
+                    const BoxDecoration(color: Colors.white, boxShadow: [
                   BoxShadow(
                       color: Colors.grey,
                       spreadRadius: 2,
@@ -228,7 +231,9 @@ class MenuDetailPageController extends GetxController {
                       offset: Offset(0, 3))
                 ]),
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    addMenuToCart(context, quantityTF.text, menu, true);
+                  },
                   child: Container(
                     height: 50,
                     decoration: BoxDecoration(
@@ -241,10 +246,10 @@ class MenuDetailPageController extends GetxController {
                           MdiIcons.cartPlus,
                           color: Colors.white,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 8,
                         ),
-                        Text(
+                        const Text(
                           'Tambah Ke Keranjang',
                           style: TextStyle(
                               fontFamily: 'Poppins', color: Colors.white),
@@ -259,5 +264,127 @@ class MenuDetailPageController extends GetxController {
         );
       },
     );
+  }
+
+  addMenuToCart(
+      BuildContext context, String quantity, menu menu, bool fromDetail) async {
+    EasyLoading.instance
+      ..indicatorWidget = SpinKitPouringHourGlassRefined(
+        color: Theme.of(context).primaryColor,
+      )
+      ..textColor = Colors.white
+      ..progressColor = Colors.white
+      ..indicatorColor = Colors.white
+      ..backgroundColor = Colors.white;
+
+    EasyLoading.show(status: 'Loading...', maskType: EasyLoadingMaskType.black);
+
+    await FirebaseFirestore.instance
+        .collection('user cart')
+        .doc(GlobalVar.currentUser.user_email)
+        .set({'dummy': 'dummy'});
+
+    DocumentReference doc = FirebaseFirestore.instance
+        .collection('user cart')
+        .doc(GlobalVar.currentUser.user_email)
+        .collection('cart detail')
+        .doc(menu.menu_id);
+    try {
+      int newQty = 0;
+      var docRef = await doc.get();
+      if (docRef.exists && docRef.data() != null) {
+        int qty1 = int.tryParse(quantity) ?? 0;
+        int qty2 = docRef.get('quantity');
+        newQty = qty1 + qty2;
+        if (menu.menu_stock! < newQty) {
+          EasyLoading.dismiss();
+          Get.snackbar(
+            "Error",
+            "Terjadi error, coba lagi nanti",
+            icon: const Icon(
+              Icons.error,
+              color: Colors.white,
+            ),
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            borderRadius: 20,
+            margin: const EdgeInsets.all(15),
+            colorText: Colors.white,
+            duration: const Duration(seconds: 2),
+          );
+          return;
+        }
+      } else {
+        newQty = int.tryParse(quantity) ?? 0;
+      }
+      var tenantData = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(menu.tenant_id)
+          .get();
+      Map<String, dynamic> data = {
+        'menu_id': menu.menu_id,
+        'tenant_id': menu.tenant_id,
+        'tenant_name': tenantData.data()!['user_name'],
+        'notes': '',
+        'quantity': newQty
+      };
+      doc.set(data).whenComplete(() {
+        if (fromDetail) {
+          Get.back();
+        }
+        EasyLoading.dismiss();
+        Get.snackbar("Error", '',
+            titleText: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(
+                  MdiIcons.cartCheck,
+                  size: 27,
+                  color: Colors.white,
+                ),
+                const SizedBox(width: 8),
+                const Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "SUCCESS",
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontFamily: 'Roboto',
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        "Added to Cart",
+                        style: TextStyle(
+                            fontFamily: 'Roboto',
+                            fontSize: 11,
+                            color: Colors.white),
+                        softWrap: true,
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+            borderRadius: 33,
+            messageText: const SizedBox.shrink(),
+            padding: const EdgeInsets.only(
+              left: 12,
+              right: 12,
+              top: 15,
+              bottom: 8,
+            ),
+            margin: const EdgeInsets.symmetric(vertical: 75, horizontal: 70),
+            snackPosition: SnackPosition.BOTTOM,
+            colorText: Theme.of(context).primaryColor,
+            backgroundColor: Colors.green,
+            duration: const Duration(milliseconds: 800));
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 }

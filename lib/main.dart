@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import 'package:skripsi/GlobalVar.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
     return KeyboardDismissOnTap(
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
+        builder: EasyLoading.init(),
         theme: ThemeData(
           primaryColor: Colors.blue[300],
           textSelectionTheme: TextSelectionThemeData(

@@ -50,3 +50,35 @@ class menu {
     };
   }
 }
+
+class cart {
+  String menu_id;
+  String tenant_id;
+  String tenant_name;
+  RxBool checked;
+  int quantity;
+  RxBool isActive;
+  String notes;
+  String status;
+  cart({
+    required this.menu_id,
+    required this.tenant_id,
+    required this.tenant_name,
+    required this.checked,
+    required this.quantity,
+    required this.isActive,
+    required this.notes,
+    required this.status,
+  });
+}
+
+class cartList {
+  List<cart> foodList;
+  RxBool checked;
+  String tenant_name;
+  cartList({
+    required this.foodList,
+    required this.checked,
+    required this.tenant_name
+  });
+}

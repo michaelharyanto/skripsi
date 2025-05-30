@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:skripsi/GlobalVar.dart';
@@ -24,5 +25,25 @@ class HomePageController extends GetxController {
     } catch (e) {
       print(e);
     }
+  }
+
+  getCartCount() {
+    FirebaseFirestore.instance
+        .collection('user cart')
+        .doc(GlobalVar.currentUser.user_email)
+        .collection('cart detail')
+        .snapshots(includeMetadataChanges: true)
+        .listen((event) {
+      try {
+        GlobalVar.cartCount.value = 0;
+        for (var item in event.docs) {
+          int count = item.get('quantity');
+          GlobalVar.cartCount.value += count;
+          print(GlobalVar.cartCount.value);
+        }
+      } catch (e) {
+        print(e);
+      }
+    });
   }
 }

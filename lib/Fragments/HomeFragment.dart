@@ -11,6 +11,8 @@ import 'package:carousel_slider/carousel_slider.dart' as cs;
 import 'package:shimmer/shimmer.dart';
 import 'package:skripsi/Controllers/HomePageController.dart';
 import 'package:skripsi/Data%20Model/menu.dart';
+import 'package:skripsi/GlobalVar.dart';
+import 'package:skripsi/Pages/CartPage.dart';
 import 'package:skripsi/Pages/MenuDetailPage.dart';
 
 class HomeFragment extends StatefulWidget {
@@ -150,8 +152,11 @@ class _HomeFragmentState extends State<HomeFragment> {
                                 padding: const EdgeInsets.only(bottom: 8),
                                 child: InkWell(
                                   onTap: () {
-                                    menu currentMenu = menu.fromJson(menuData.data());
-                                    Get.to(MenuDetailPage(currentMenu: currentMenu,));
+                                    menu currentMenu =
+                                        menu.fromJson(menuData.data());
+                                    Get.to(MenuDetailPage(
+                                      currentMenu: currentMenu,
+                                    ));
                                   },
                                   child: Material(
                                     color: Colors.white,
@@ -339,21 +344,32 @@ class _HomeFragmentState extends State<HomeFragment> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 25),
-            child: Badge(
-              label: const Text(
-                '99+',
-                style: TextStyle(fontFamily: 'Poppins', color: Colors.white),
-              ),
-              offset: const Offset(8, -8),
-              backgroundColor: Colors.red,
-              child: GestureDetector(
-                child: Icon(
-                  MdiIcons.cartOutline,
-                  size: 28,
-                  color: Colors.white,
-                ),
-              ),
-            ),
+            child: Obx(() => GestureDetector(
+                  onTap: () {
+                    Get.to(CartPage());
+                  },
+                  child: Badge(
+                    label: Text(
+                      GlobalVar.cartCount.value <= 99
+                          ? GlobalVar.cartCount.value.toString()
+                          : '99+',
+                      style: const TextStyle(
+                          fontFamily: 'Poppins',
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    isLabelVisible: GlobalVar.cartCount.value != 0,
+                    offset: const Offset(8, -8),
+                    backgroundColor: Colors.red,
+                    child: GestureDetector(
+                      child: Icon(
+                        MdiIcons.cartOutline,
+                        size: 28,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                )),
           )
         ],
       ),

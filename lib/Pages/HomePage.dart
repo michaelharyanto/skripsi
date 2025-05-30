@@ -32,6 +32,7 @@ class _HomePageState extends State<HomePage> {
     // TODO: implement initState
     super.initState();
     h.getCarrousel();
+    h.getCartCount();
   }
 
   @override

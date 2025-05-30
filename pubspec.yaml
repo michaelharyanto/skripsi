@@ -56,6 +56,8 @@ dependencies:
   carousel_slider: ^4.2.1
   cached_network_image: ^3.3.1
   shimmer: ^3.0.0
+  flutter_easyloading: ^3.0.5
+  flutter_pannable_rating_bar: ^2.7.2+1
   
 
 dev_dependencies:
