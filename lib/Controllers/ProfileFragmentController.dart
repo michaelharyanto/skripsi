@@ -92,7 +92,9 @@ class ProfileFragmentController extends GetxController {
                         Text(
                           'Keluar',
                           style: TextStyle(
-                              fontFamily: 'Poppins', color: Colors.white),
+                              fontFamily: 'Poppins',
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700),
                         )
                       ],
                     ),

@@ -85,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
                               enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
                                   borderSide: const BorderSide(
-                                      color: Color(0xFFD9D9D9))),
+                                      color: Colors.grey)),
                             ),
                           ),
                           const SizedBox(
@@ -132,7 +132,7 @@ class _LoginPageState extends State<LoginPage> {
                                   enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(8),
                                       borderSide: const BorderSide(
-                                          color: Color(0xFFD9D9D9))),
+                                          color: Colors.grey)),
                                 ),
                               )),
                           const SizedBox(

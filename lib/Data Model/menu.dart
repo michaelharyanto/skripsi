@@ -55,20 +55,26 @@ class cart {
   String menu_id;
   String tenant_id;
   String tenant_name;
+  int? menu_stock;
+  int? menu_price;
   RxBool checked;
   int quantity;
-  RxBool isActive;
+  RxBool? isActive;
   String notes;
   String status;
+  menu? currentMenu;
   cart({
     required this.menu_id,
     required this.tenant_id,
     required this.tenant_name,
     required this.checked,
     required this.quantity,
-    required this.isActive,
+    this.isActive,
+    this.menu_stock,
+    this.menu_price,
     required this.notes,
     required this.status,
+    this.currentMenu
   });
 }
 

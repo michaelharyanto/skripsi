@@ -6,6 +6,7 @@ import 'package:skripsi/Controllers/HomePageController.dart';
 import 'package:skripsi/Fragments/ChatroomListFragment.dart';
 import 'package:skripsi/Fragments/HistoryFragment.dart';
 import 'package:skripsi/Fragments/HomeFragment.dart';
+import 'package:skripsi/Fragments/MenuFragment.dart';
 import 'package:skripsi/Fragments/ProfileFragment.dart';
 import 'package:skripsi/Fragments/WishlistFragment.dart';
 import 'package:skripsi/GlobalVar.dart';
@@ -24,7 +25,9 @@ class _HomePageState extends State<HomePage> {
     const HomeFragment(),
     const ChatroomListFragment(),
     const HistoryFragment(),
-    const WishlistFragment(),
+    GlobalVar.currentUser.user_role == 'tenant'
+        ? MenuFragment()
+        : const WishlistFragment(),
     const ProfileFragment()
   ];
   @override
@@ -70,7 +73,7 @@ class _HomePageState extends State<HomePage> {
                           color: Colors.white,
                         ),
                         activeIcon: Icon(
-                          Icons.assignment,
+                          Icons.chat_outlined,
                           color: Theme.of(context).primaryColor,
                         ),
                         title: 'Pesan',
@@ -86,17 +89,29 @@ class _HomePageState extends State<HomePage> {
                         ),
                         title: 'Riwayat',
                         fontFamily: 'Poppins'),
-                    TabItem(
-                        icon: Icon(
-                          MdiIcons.heart,
-                          color: Colors.white,
-                        ),
-                        activeIcon: Icon(
-                          MdiIcons.heart,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                        title: 'Wishlist',
-                        fontFamily: 'Poppins'),
+                    GlobalVar.currentUser.user_role == 'tenant'
+                        ? TabItem(
+                            icon: Icon(
+                              Icons.restaurant,
+                              color: Colors.white,
+                            ),
+                            activeIcon: Icon(
+                              Icons.restaurant,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            title: 'Menu',
+                            fontFamily: 'Poppins')
+                        : TabItem(
+                            icon: Icon(
+                              MdiIcons.heart,
+                              color: Colors.white,
+                            ),
+                            activeIcon: Icon(
+                              MdiIcons.heart,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            title: 'Wishlist',
+                            fontFamily: 'Poppins'),
                     TabItem(
                         icon: const Icon(
                           Icons.person,

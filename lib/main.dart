@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
               cursorColor: Colors.blue[300],
               selectionColor: Colors.blue[300]!.withOpacity(0.5),
               selectionHandleColor: Colors.blue[300]),
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(seedColor:  Colors.blue[300]!),
           useMaterial3: true,
         ),
         home: SplashScreen(),
