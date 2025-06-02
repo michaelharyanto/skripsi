@@ -437,11 +437,12 @@ class CheckoutPageController extends GetxController {
               .update(menuRef, {'menu_stock': currentStock - menu.quantity});
         }
         Map<String, dynamic> senddata = {
-          'orderID': docNum,
+          'order_id': docNum,
           'user_id': GlobalVar.currentUser.user_id,
           'user_name': GlobalVar.currentUser.user_name,
           'user_email': GlobalVar.currentUser.user_email,
-          'tenant': tenantData.docs.first['user_name'],
+          'tenant_name': tenantData.docs.first['user_name'],
+          'tenant_id': tenantData.docs.first['user_id'],
           'created': DateFormat('yyyy-MM-dd HH:mm:ss').format(today),
           'timeline': [
             {
@@ -454,9 +455,9 @@ class CheckoutPageController extends GetxController {
           'isProcessed': false,
           'voucherApplied': currentVoucher.value.voucher_id.isNotEmpty,
           if (currentVoucher.value.voucher_id.isNotEmpty)
-            'voucherID': currentVoucher.value.voucher_id.toString(),
+            'voucher_id': currentVoucher.value.voucher_id.toString(),
           if (currentVoucher.value.voucher_id.isNotEmpty)
-            'voucherValue': currentVoucher.value.voucher_value,
+            'voucher_value': currentVoucher.value.voucher_value,
           'detail': detail,
           'statusList': status,
         };

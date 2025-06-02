@@ -3,7 +3,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
+import 'package:intl/date_symbol_data_file.dart';
 import 'package:skripsi/GlobalVar.dart';
 import 'package:skripsi/Pages/HomePage.dart';
 import 'package:skripsi/Pages/SplashScreen.dart';
@@ -26,6 +28,13 @@ class MyApp extends StatelessWidget {
     return KeyboardDismissOnTap(
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
+        locale: Locale('id'),
+        supportedLocales: [Locale('id')],
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate
+        ],
         builder: EasyLoading.init(),
         getPages: [GetPage(name: '/homepage', page: () => HomePage())],
         theme: ThemeData(
