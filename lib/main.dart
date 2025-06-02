@@ -5,6 +5,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import 'package:skripsi/GlobalVar.dart';
+import 'package:skripsi/Pages/HomePage.dart';
 import 'package:skripsi/Pages/SplashScreen.dart';
 import 'package:skripsi/firebase_options.dart';
 
@@ -26,13 +27,14 @@ class MyApp extends StatelessWidget {
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
         builder: EasyLoading.init(),
+        getPages: [GetPage(name: '/homepage', page: () => HomePage())],
         theme: ThemeData(
           primaryColor: Colors.blue[300],
           textSelectionTheme: TextSelectionThemeData(
               cursorColor: Colors.blue[300],
               selectionColor: Colors.blue[300]!.withOpacity(0.5),
               selectionHandleColor: Colors.blue[300]),
-          colorScheme: ColorScheme.fromSeed(seedColor:  Colors.blue[300]!),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue[300]!),
           useMaterial3: true,
         ),
         home: SplashScreen(),

@@ -79,12 +79,14 @@ class cart {
 }
 
 class cartList {
-  List<cart> foodList;
+  List<cart> menuList;
   RxBool checked;
+  int productsTicked;
   String tenant_name;
   cartList({
-    required this.foodList,
+    required this.menuList,
     required this.checked,
+    required this.productsTicked,
     required this.tenant_name
   });
 }

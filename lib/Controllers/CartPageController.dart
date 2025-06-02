@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,12 +12,15 @@ class CartPageController extends GetxController {
   RxInt checkCount = 0.obs;
 
   menuCheckboxClick(int tenantIndex, int menuIndex, bool value) {
-    userCart[tenantIndex].foodList[menuIndex].checked.value = value;
-    if (userCart[tenantIndex].foodList[menuIndex].checked.value) {
+    userCart[tenantIndex].menuList[menuIndex].checked.value = value;
+    if (userCart[tenantIndex].menuList[menuIndex].checked.value) {
       checkCount.value++;
+      userCart[tenantIndex].productsTicked++;
     } else {
       checkCount.value--;
+      userCart[tenantIndex].productsTicked--;
     }
+    print(userCart[tenantIndex].productsTicked);
     tenantCheckboxUpdate(tenantIndex);
   }
 
@@ -29,14 +31,14 @@ class CartPageController extends GetxController {
 
   tenantCheckboxUpdate(int tenantIndex) {
     bool check = userCart[tenantIndex]
-        .foodList
+        .menuList
         .every((element) => element.checked.value == true);
     userCart[tenantIndex].checked.value = check;
     getTotal();
   }
 
   setAllMenuCheckbox(int tenantIndex, bool value) {
-    for (var element in userCart[tenantIndex].foodList) {
+    for (var element in userCart[tenantIndex].menuList) {
       if (element.menu_stock == 0 || !element.isActive!.value) {
         continue;
       }
@@ -47,9 +49,12 @@ class CartPageController extends GetxController {
       element.checked.value = value;
       if (element.checked.value) {
         checkCount.value++;
+        userCart[tenantIndex].productsTicked++;
       } else {
         checkCount.value--;
+        userCart[tenantIndex].productsTicked--;
       }
+      print(userCart[tenantIndex].productsTicked);
     }
     tenantCheckboxUpdate(tenantIndex);
     getTotal();
@@ -58,12 +63,21 @@ class CartPageController extends GetxController {
   getTotal() {
     totalPrice.value = 0;
     for (var cart in userCart) {
-      for (var item in cart.foodList) {
+      for (var item in cart.menuList) {
         if (item.checked.value) {
           totalPrice += item.menu_price! * item.quantity;
         }
       }
     }
+  }
+
+  bool hasOtherCartWithProductsTickedMoreThanOne(int currentIndex) {
+    for (int i = 0; i < userCart.length; i++) {
+      if (i != currentIndex && userCart[i].productsTicked >= 1) {
+        return true;
+      }
+    }
+    return false;
   }
 
   getUserCart() {
@@ -92,7 +106,8 @@ class CartPageController extends GetxController {
         if (i == 0) {
           userCart.add(cartList(
               checked: false.obs,
-              foodList: [],
+              productsTicked: 0,
+              menuList: [],
               tenant_name: _cart[i].tenant_name));
         }
         if (i >= 1) {
@@ -100,12 +115,13 @@ class CartPageController extends GetxController {
             index++;
             userCart.add(cartList(
                 checked: false.obs,
-                foodList: [],
+                productsTicked: 0,
+                menuList: [],
                 tenant_name: _cart[i].tenant_name));
           }
-          userCart[index].foodList.add(_cart[i]);
+          userCart[index].menuList.add(_cart[i]);
         } else {
-          userCart[index].foodList.add(_cart[i]);
+          userCart[index].menuList.add(_cart[i]);
         }
       }
     });
@@ -334,8 +350,7 @@ class CartPageController extends GetxController {
                                   color: Theme.of(context).primaryColor)),
                           enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
-                              borderSide:
-                                  const BorderSide(color:Colors.grey)),
+                              borderSide: const BorderSide(color: Colors.grey)),
                         ),
                       ),
                     ],
@@ -393,7 +408,8 @@ class CartPageController extends GetxController {
 
   Future<List<cartList>> filterList() async {
     List<cartList> cl = [];
-    cartList temp = cartList(foodList: [], checked: false.obs, tenant_name: '');
+    cartList temp = cartList(
+        menuList: [], checked: false.obs, tenant_name: '', productsTicked: 0);
     cart temp2 = cart(
         menu_id: '',
         tenant_id: '',
@@ -402,22 +418,27 @@ class CartPageController extends GetxController {
         quantity: 0,
         notes: '',
         status: '');
-        for (var element in userCart) {
-          if (element.checked.value) {
-            cl.add(element);
-            continue;
-          }
-          for (var menu in element.foodList) {
-            if (menu.checked.value) {
-              temp2 = menu;
-              temp.foodList.add(temp2);
-            }
-          }
-          if (temp.foodList.isNotEmpty) {
-            cl.add(temp);
-            temp = cartList(foodList: [], checked: false.obs, tenant_name: '');
-          }
+    for (var element in userCart) {
+      if (element.checked.value) {
+        cl.add(element);
+        continue;
+      }
+      for (var menu in element.menuList) {
+        if (menu.checked.value) {
+          temp2 = menu;
+          temp.menuList.add(temp2);
         }
+      }
+      if (temp.menuList.isNotEmpty) {
+        temp.tenant_name = element.menuList.first.tenant_name;
+        cl.add(temp);
+        temp = cartList(
+            menuList: [],
+            checked: false.obs,
+            tenant_name: '',
+            productsTicked: 0);
+      }
+    }
     return cl;
   }
 }

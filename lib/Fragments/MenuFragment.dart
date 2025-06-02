@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:skripsi/Controllers/MenuFragmentController.dart';
 import 'package:skripsi/Pages/AddMenuPage.dart';
+import 'package:skripsi/Pages/EditMenuPage.dart';
 
 class MenuFragment extends StatefulWidget {
   const MenuFragment({super.key});
@@ -93,7 +94,10 @@ class _MenuFragmentState extends State<MenuFragment> {
                                               imageUrl: menu.menu_image!),
                                         ),
                                         IconButton(
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              Get.to(EditMenuPage(
+                                                  currentMenu: menu));
+                                            },
                                             icon: Icon(
                                               MdiIcons.pencil,
                                               color: Theme.of(context)
@@ -171,7 +175,8 @@ class _MenuFragmentState extends State<MenuFragment> {
                                             Visibility(
                                                 visible: menu.menu_stock! <= 0,
                                                 child: Container(
-                                                  padding: const EdgeInsets.symmetric(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
                                                       vertical: 5,
                                                       horizontal: 8),
                                                   decoration: BoxDecoration(
@@ -206,8 +211,8 @@ class _MenuFragmentState extends State<MenuFragment> {
                                                 decoration: BoxDecoration(
                                                     color: Colors.white,
                                                     border: Border.all(
-                                                        color:
-                                                            const Color(0xFFA8AAB7)),
+                                                        color: const Color(
+                                                            0xFFA8AAB7)),
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             8)),

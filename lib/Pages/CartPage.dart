@@ -48,7 +48,11 @@ class _CartPageState extends State<CartPage> {
                               Obx(() => Checkbox(
                                     value: c.userCart[index].checked.value,
                                     onChanged: (value) {
-                                      c.tenantCheckboxClick(index, value!);
+                                      if (!c
+                                          .hasOtherCartWithProductsTickedMoreThanOne(
+                                              index)) {
+                                        c.tenantCheckboxClick(index, value!);
+                                      }
                                     },
                                     activeColor: Theme.of(context).primaryColor,
                                   )),
@@ -74,10 +78,10 @@ class _CartPageState extends State<CartPage> {
                         ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: c.userCart[index].foodList.length,
+                          itemCount: c.userCart[index].menuList.length,
                           itemBuilder: (context, menuIndex) {
                             var currentMenu =
-                                c.userCart[index].foodList[menuIndex];
+                                c.userCart[index].menuList[menuIndex];
                             return StreamBuilder(
                               stream: FirebaseFirestore.instance
                                   .collection('menu list')
@@ -88,13 +92,13 @@ class _CartPageState extends State<CartPage> {
                                   return Container();
                                 } else {
                                   var menuData = menuSnapshot.data!.data()!;
-                                  c.userCart[index].foodList[menuIndex]
+                                  c.userCart[index].menuList[menuIndex]
                                       .menu_stock = menuData['menu_stock'];
-                                  c.userCart[index].foodList[menuIndex]
+                                  c.userCart[index].menuList[menuIndex]
                                       .menu_price = menuData['menu_price'];
-                                  c.userCart[index].foodList[menuIndex]
+                                  c.userCart[index].menuList[menuIndex]
                                       .isActive!.value = menuData['isActive'];
-                                  c.userCart[index].foodList[menuIndex]
+                                  c.userCart[index].menuList[menuIndex]
                                       .currentMenu = menu.fromJson(menuData);
                                   return Container(
                                     decoration: BoxDecoration(
@@ -114,8 +118,14 @@ class _CartPageState extends State<CartPage> {
                                                     value: currentMenu
                                                         .checked.value,
                                                     onChanged: (value) {
-                                                      c.menuCheckboxClick(index,
-                                                          menuIndex, value!);
+                                                      if (!c
+                                                          .hasOtherCartWithProductsTickedMoreThanOne(
+                                                              index)) {
+                                                        c.menuCheckboxClick(
+                                                            index,
+                                                            menuIndex,
+                                                            value!);
+                                                      }
                                                     },
                                                     activeColor:
                                                         Theme.of(context)
@@ -258,7 +268,7 @@ class _CartPageState extends State<CartPage> {
                                                                             .toString(),
                                                                         style: TextStyle(
                                                                             fontWeight: FontWeight
-                                                                                .w500,
+                                                                                .w700,
                                                                             fontFamily:
                                                                                 'Poppins',
                                                                             color:
@@ -441,7 +451,7 @@ class _CartPageState extends State<CartPage> {
                             ? Container(
                                 height: 10,
                                 width: Get.width,
-                                color: const Color(0xFF979797),
+                                color: Colors.grey[300],
                               )
                             : Container()
                       ],
@@ -492,11 +502,6 @@ class _CartPageState extends State<CartPage> {
                 child: InkWell(
                     onTap: () async {
                       List<cartList> checkedList = await c.filterList();
-                      for (var element in checkedList) {
-                        for (var item in element.foodList) {
-                          print(item.currentMenu!.menu_name);
-                        }
-                      }
                       Get.to(CheckoutPage(items: checkedList));
                     },
                     child: Container(

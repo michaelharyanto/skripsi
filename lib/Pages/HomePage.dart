@@ -69,14 +69,14 @@ class _HomePageState extends State<HomePage> {
                         fontFamily: 'Poppins'),
                     TabItem(
                         icon: const Icon(
-                          Icons.assignment,
+                          Icons.chat_outlined,
                           color: Colors.white,
                         ),
                         activeIcon: Icon(
                           Icons.chat_outlined,
                           color: Theme.of(context).primaryColor,
                         ),
-                        title: 'Pesan',
+                        title: 'Chat',
                         fontFamily: 'Poppins'),
                     TabItem(
                         icon: const Icon(

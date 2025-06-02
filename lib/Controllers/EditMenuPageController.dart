@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_imagekit/flutter_imagekit.dart';
 import 'package:get/get.dart';
@@ -11,9 +10,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:skripsi/GlobalVar.dart';
 import 'package:skripsi/Widgets/PopUpLoading.dart';
-import 'package:uuid/v4.dart';
 
-class AddMenuPageConrtoller extends GetxController {
+class EditMenuPageController extends GetxController {
   RxString imagePath = ''.obs;
   RxBool invokeButton = false.obs;
 
@@ -36,8 +34,8 @@ class AddMenuPageConrtoller extends GetxController {
     });
   }
 
-  showAddModal(BuildContext context, String imagePath, String menuName,
-      String menuDesc, int menuPrice, int stock, String tenant_id) {
+  showEditModal(BuildContext context, String menu_id, String imagePath,
+      String menuName, String menuDesc, int menuPrice) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -62,7 +60,7 @@ class AddMenuPageConrtoller extends GetxController {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      'Tambah Menu',
+                      'Edit Menu',
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -89,7 +87,7 @@ class AddMenuPageConrtoller extends GetxController {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Apakah Anda yakin untuk menambah menu ini?',
+                        Text('Apakah Anda yakin untuk mengubah data menu ini?',
                             style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 14,
@@ -113,8 +111,8 @@ class AddMenuPageConrtoller extends GetxController {
                 ]),
                 child: InkWell(
                   onTap: () {
-                    addNewMenu(context, imagePath, menuName, menuDesc,
-                        menuPrice, stock, tenant_id);
+                    editMenu(context, menu_id, imagePath, menuName, menuDesc,
+                        menuPrice);
                   },
                   child: Container(
                     height: 50,
@@ -143,53 +141,59 @@ class AddMenuPageConrtoller extends GetxController {
     );
   }
 
-  addNewMenu(BuildContext context, String imagePath, String menuName,
-      String menuDesc, int menuPrice, int stock, String tenant_id) {
+  editMenu(BuildContext context, String menu_id, String imagePath,
+      String menuName, String menuDesc, int menuPrice) {
     PopUpLoading().showdialog(context);
-    ImageKit.io(
-            folder: 'Menu_Image',
-            File(imagePath),
-            privateKey: GlobalVar.carouselToken)
-        .then((value) async {
-      var uuid = const UuidV4().generate();
-      var menuData = await FirebaseFirestore.instance
-          .collection('menu list')
-          .doc(uuid)
-          .get();
-      while (menuData.exists) {
-        uuid = const UuidV4().generate();
-        menuData = await FirebaseFirestore.instance
-            .collection('menu list')
-            .doc(uuid)
-            .get();
-      }
-      FirebaseFirestore.instance.collection('menu list').doc(uuid).set({
-        'averageRating': 0,
-        'isActive': true,
+    if (imagePath.isNotEmpty) {
+      ImageKit.io(
+              folder: 'Menu_Image',
+              File(imagePath),
+              privateKey: GlobalVar.carouselToken)
+          .then((value) async {
+        FirebaseFirestore.instance.collection('menu list').doc(menu_id).set({
+          'menu_desc': menuDesc,
+          'menu_image': value,
+          'menu_name': menuName,
+          'menu_price': menuPrice,
+        }, SetOptions(merge: true)).then((value) async {
+          Get.back();
+          AwesomeDialog(
+                  context: context,
+                  dialogType: DialogType.success,
+                  title: 'Berhasil Diedit',
+                  titleTextStyle: const TextStyle(
+                      fontFamily: 'Poppins', color: Colors.black),
+                  dismissOnBackKeyPress: false,
+                  dismissOnTouchOutside: false,
+                  animType: AnimType.scale)
+              .show();
+          await Future.delayed(const Duration(seconds: 2));
+          Get.back();
+          Get.back();
+          Get.back();
+        });
+      });
+    } else {
+      FirebaseFirestore.instance.collection('menu list').doc(menu_id).set({
         'menu_desc': menuDesc,
-        'menu_id': uuid,
-        'menu_image': value,
         'menu_name': menuName,
         'menu_price': menuPrice,
-        'menu_stock': stock,
-        'tenant_id': tenant_id
       }, SetOptions(merge: true)).then((value) async {
         Get.back();
         AwesomeDialog(
-                context: context,
-                dialogType: DialogType.success,
-                title: 'Berhasil Ditambah',
-                titleTextStyle:
-                    const TextStyle(fontFamily: 'Poppins', color: Colors.black),
-                dismissOnBackKeyPress: false,
-                dismissOnTouchOutside: false,
-                animType: AnimType.scale)
-            .show();
+            context: context,
+            dialogType: DialogType.success,
+            title: 'Berhasil Diedit',
+            titleTextStyle:
+                const TextStyle(fontFamily: 'Poppins', color: Colors.black),
+            dismissOnBackKeyPress: false,
+            dismissOnTouchOutside: false,
+            animType: AnimType.scale);
         await Future.delayed(const Duration(seconds: 2));
         Get.back();
         Get.back();
         Get.back();
       });
-    });
+    }
   }
 }
