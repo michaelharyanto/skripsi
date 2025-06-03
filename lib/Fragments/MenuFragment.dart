@@ -20,10 +20,16 @@ class MenuFragment extends StatefulWidget {
 class _MenuFragmentState extends State<MenuFragment> {
   TextEditingController searchTF = TextEditingController();
   MenuFragmentController m = Get.put(MenuFragmentController());
+  ScrollController sc = ScrollController();
   @override
   void initState() {
     super.initState();
     m.initMenu();
+    sc.addListener(() { 
+      if (sc.position.pixels == sc.position.maxScrollExtent) {
+        m.getMoreMenu();
+      }
+    });
   }
 
   @override
@@ -64,6 +70,7 @@ class _MenuFragmentState extends State<MenuFragment> {
               ),
               Obx(() => Expanded(
                       child: ListView.builder(
+                        controller: sc,
                     itemCount: m.menuList.length,
                     itemBuilder: (context, index) {
                       var menu = m.menuList[index];

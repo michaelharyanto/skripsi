@@ -70,7 +70,7 @@ class _TenantHomeFragmentState extends State<TenantHomeFragment> {
                                   height: 10,
                                 ),
                                 const Text(
-                                  'Voucher Digunakan',
+                                  'Jumlah Omzet',
                                   style: TextStyle(
                                     fontFamily: 'Poppins',
                                     fontSize: 13,
@@ -251,6 +251,46 @@ class _TenantHomeFragmentState extends State<TenantHomeFragment> {
                                         ),
                                         child: Column(
                                           children: [
+                                            Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 8,
+                                                        horizontal: 12),
+                                                decoration: const BoxDecoration(
+                                                    border: Border(
+                                                        bottom: BorderSide(
+                                                            color:
+                                                                Colors.grey))),
+                                                child: Row(
+                                                  children: [
+                                                    RichText(
+                                                        text:
+                                                            TextSpan(children: [
+                                                      const TextSpan(
+                                                        text: 'Pembeli',
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontFamily:
+                                                                'Poppins',
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w700),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            ' : ${order.user_name}',
+                                                        style: const TextStyle(
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            fontFamily:
+                                                                'Poppins',
+                                                            fontSize: 14),
+                                                      ),
+                                                    ])),
+                                                  ],
+                                                )),
                                             Container(
                                               width: Get.width,
                                               padding: const EdgeInsets.all(8),

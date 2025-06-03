@@ -356,7 +356,7 @@ class HistoryDetailPageController extends GetxController {
       // ignore: use_build_context_synchronously
       context: context,
       dialogType: DialogType.success,
-      title: 'Pesanan Diterima',
+      title: 'Notifikasi telah dikirim pembeli',
       titleTextStyle: const TextStyle(
           color: Colors.black,
           fontFamily: 'Poppins',
@@ -380,12 +380,16 @@ class HistoryDetailPageController extends GetxController {
         .collection('pesanan')
         .doc(order_id)
         .update({'timeline': timeline, 'lastStatus': 'COMPLETED'});
+    await FirebaseFirestore.instance
+        .collection('pesanan')
+        .doc(order_id)
+        .update({'dateComplete': currentDate});
     // tambahkan fcm
     AwesomeDialog(
       // ignore: use_build_context_synchronously
       context: context,
       dialogType: DialogType.success,
-      title: 'Pesanan Diterima',
+      title: 'Pesanan Selesai',
       titleTextStyle: const TextStyle(
           color: Colors.black,
           fontFamily: 'Poppins',

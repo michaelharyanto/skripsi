@@ -38,6 +38,7 @@ class MenuFragmentController extends GetxController {
         .where('tenant_id', isEqualTo: GlobalVar.currentUser.user_id)
         .orderBy('isActive', descending: true)
         .orderBy('menu_name')
+        .startAfterDocument(lastMenu!)
         .limit(10);
     query.snapshots().listen((event) {
       if (event.docs.isNotEmpty) {

@@ -54,6 +54,9 @@ class HistoryFragmentController extends GetxController {
             voucherApplied: doc['voucherApplied'],
             voucher_id: doc['voucherApplied'] ? doc['voucher_id'] : '',
             voucher_value: doc['voucherApplied'] ? doc['voucher_value'] : 0,
+            user_email: doc['user_email'],
+            user_id: doc['user_id'],
+            user_name: doc['user_name']
           ));
         }
       }
@@ -102,6 +105,9 @@ class HistoryFragmentController extends GetxController {
           voucherApplied: doc['voucherApplied'],
           voucher_id: doc['voucherApplied'] ? doc['voucher_id'] : '',
           voucher_value: doc['voucherApplied'] ? doc['voucher_value'] : 0,
+          user_email: doc['user_email'],
+            user_id: doc['user_id'],
+            user_name: doc['user_name']
         ));
       }
     }

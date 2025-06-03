@@ -17,11 +17,18 @@ class OrderFragment extends StatefulWidget {
 
 class _OrderFragmentState extends State<OrderFragment> {
   OrderFragmentsController o = Get.put(OrderFragmentsController());
+  ScrollController sc = ScrollController();
+  TextEditingController searchTF = TextEditingController();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     o.initHistory();
+    sc.addListener(() {
+      if (sc.position.pixels == sc.position.maxScrollExtent) {
+        o.getMoreHistory();
+      }
+    });
   }
   @override
   Widget build(BuildContext context) {
@@ -34,9 +41,9 @@ class _OrderFragmentState extends State<OrderFragment> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: TextFormField(
-                // controller: searchTF,
+                controller: searchTF,
                 onChanged: (value) {
-                  // m.searchMenu(value);
+                  o.searchHistory(searchTF.text);
                 },
                 style: const TextStyle(
                     fontFamily: 'Poppins', fontWeight: FontWeight.w500),
@@ -64,7 +71,7 @@ class _OrderFragmentState extends State<OrderFragment> {
             ),
             Obx(() => Expanded(
                     child: ListView.builder(
-                  // controller: sc,
+                  controller: sc,
                   itemCount: o.historyList.length,
                   itemBuilder: (context, index) {
                     var order = o.historyList[index];
@@ -152,6 +159,38 @@ class _OrderFragmentState extends State<OrderFragment> {
                                   ),
                                   child: Column(
                                     children: [
+                                      Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 8, horizontal: 12),
+                                            decoration: const BoxDecoration(
+                                                border: Border(
+                                                    bottom: BorderSide(
+                                                        color: Colors.grey))),
+                                            child: Row(
+                                              children: [
+                                                RichText(
+                                                    text: TextSpan(children: [
+                                                  const TextSpan(
+                                                    text: 'Pembeli',
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontFamily: 'Poppins',
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w700),
+                                                  ),
+                                                  TextSpan(
+                                                    text:
+                                                        ' : ${order.user_name}',
+                                                    style: const TextStyle(
+                                                        color: Colors.black,
+                                                        fontWeight: FontWeight.w500,
+                                                        fontFamily: 'Poppins',
+                                                        fontSize: 14),
+                                                  ),
+                                                ])),
+                                              ],
+                                            )),
                                       Container(
                                         width: Get.width,
                                         padding: const EdgeInsets.all(8),

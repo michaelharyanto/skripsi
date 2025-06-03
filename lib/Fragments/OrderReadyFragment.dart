@@ -17,26 +17,34 @@ class OrderReadyFragment extends StatefulWidget {
 
 class _OrderReadyFragmentState extends State<OrderReadyFragment> {
   OrderFragmentsController o = Get.put(OrderFragmentsController());
+  ScrollController sc = ScrollController();
+  TextEditingController searchTF = TextEditingController();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     o.initReadyHistory();
+    sc.addListener(() {
+      if (sc.position.pixels == sc.position.maxScrollExtent) {
+        o.getMoreReadyHistory();
+      }
+    });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 15),
-            child: Column(
-                    children: [
+        padding: const EdgeInsets.symmetric(vertical: 15),
+        child: Column(
+          children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: TextFormField(
-                // controller: searchTF,
+                controller: searchTF,
                 onChanged: (value) {
-                  // m.searchMenu(value);
+                  o.searchReadyHistory(searchTF.text);
                 },
                 style: const TextStyle(
                     fontFamily: 'Poppins', fontWeight: FontWeight.w500),
@@ -64,7 +72,7 @@ class _OrderReadyFragmentState extends State<OrderReadyFragment> {
             ),
             Obx(() => Expanded(
                     child: ListView.builder(
-                  // controller: sc,
+                  controller: sc,
                   itemCount: o.readyHistoryList.length,
                   itemBuilder: (context, index) {
                     var order = o.readyHistoryList[index];
@@ -89,7 +97,8 @@ class _OrderReadyFragmentState extends State<OrderReadyFragment> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 15),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
@@ -129,13 +138,15 @@ class _OrderReadyFragmentState extends State<OrderReadyFragment> {
                                             child: Align(
                                               alignment: Alignment.topRight,
                                               child: Text(
-                                                DateFormat('dd-MM-yyyy HH:mm:ss')
+                                                DateFormat(
+                                                        'dd-MM-yyyy HH:mm:ss')
                                                     .format(order.created),
                                                 style: TextStyle(
                                                     color: Colors.grey[400],
                                                     fontFamily: 'Poppins',
                                                     fontSize: 12,
-                                                    fontWeight: FontWeight.w700),
+                                                    fontWeight:
+                                                        FontWeight.w700),
                                               ),
                                             ),
                                           )
@@ -152,6 +163,38 @@ class _OrderReadyFragmentState extends State<OrderReadyFragment> {
                                   ),
                                   child: Column(
                                     children: [
+                                      Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8, horizontal: 12),
+                                          decoration: const BoxDecoration(
+                                              border: Border(
+                                                  bottom: BorderSide(
+                                                      color: Colors.grey))),
+                                          child: Row(
+                                            children: [
+                                              RichText(
+                                                  text: TextSpan(children: [
+                                                const TextSpan(
+                                                  text: 'Pembeli',
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontFamily: 'Poppins',
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w700),
+                                                ),
+                                                TextSpan(
+                                                  text: ' : ${order.user_name}',
+                                                  style: const TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontFamily: 'Poppins',
+                                                      fontSize: 14),
+                                                ),
+                                              ])),
+                                            ],
+                                          )),
                                       Container(
                                         width: Get.width,
                                         padding: const EdgeInsets.all(8),
@@ -172,8 +215,9 @@ class _OrderReadyFragmentState extends State<OrderReadyFragment> {
                                                 var menu =
                                                     order.detail[menuIndex];
                                                 return Padding(
-                                                  padding: const EdgeInsets.only(
-                                                      right: 8),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 8),
                                                   child: SizedBox(
                                                     width: 100,
                                                     child: Column(
@@ -201,13 +245,16 @@ class _OrderReadyFragmentState extends State<OrderReadyFragment> {
                                                           maxLines: 2,
                                                           overflow: TextOverflow
                                                               .ellipsis,
-                                                          style: const TextStyle(
-                                                              color: Colors.black,
-                                                              fontWeight:
-                                                                  FontWeight.w500,
-                                                              fontFamily:
-                                                                  'Poppins',
-                                                              fontSize: 14),
+                                                          style:
+                                                              const TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  fontFamily:
+                                                                      'Poppins',
+                                                                  fontSize: 14),
                                                         )
                                                       ],
                                                     ),
@@ -219,13 +266,15 @@ class _OrderReadyFragmentState extends State<OrderReadyFragment> {
                                               height: 8,
                                             ),
                                             Visibility(
-                                                visible: order.detail.length > 3,
+                                                visible:
+                                                    order.detail.length > 3,
                                                 child: Text(
                                                   '+${order.detail.length - 3} Menu Lainnya',
                                                   style: TextStyle(
                                                       color: Theme.of(context)
                                                           .primaryColor,
-                                                      fontWeight: FontWeight.w700,
+                                                      fontWeight:
+                                                          FontWeight.w700,
                                                       fontFamily: 'Poppins',
                                                       fontSize: 14),
                                                 ))
@@ -241,7 +290,8 @@ class _OrderReadyFragmentState extends State<OrderReadyFragment> {
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       Column(
                                         children: [
@@ -271,7 +321,8 @@ class _OrderReadyFragmentState extends State<OrderReadyFragment> {
                                                           locale: 'id_ID',
                                                           decimalDigits: 0,
                                                           symbol: 'Rp')
-                                                      .format(order.voucherApplied
+                                                      .format(order
+                                                              .voucherApplied
                                                           ? (CheckoutPageController()
                                                                   .getTenantTotal(
                                                                       order
@@ -280,10 +331,12 @@ class _OrderReadyFragmentState extends State<OrderReadyFragment> {
                                                                   .voucher_value!)
                                                           : CheckoutPageController()
                                                               .getTenantTotal(
-                                                                  order.detail)),
+                                                                  order
+                                                                      .detail)),
                                                   style: const TextStyle(
                                                       color: Colors.black,
-                                                      fontWeight: FontWeight.w700,
+                                                      fontWeight:
+                                                          FontWeight.w700,
                                                       fontFamily: 'Poppins',
                                                       fontSize: 14),
                                                 ),
@@ -303,9 +356,9 @@ class _OrderReadyFragmentState extends State<OrderReadyFragment> {
                     );
                   },
                 )))
-                    ],
-                  ),
-          )),
+          ],
+        ),
+      )),
     );
   }
 }

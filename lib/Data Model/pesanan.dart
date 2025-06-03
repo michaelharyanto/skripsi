@@ -10,6 +10,9 @@ class pesanan {
   bool voucherApplied;
   String? voucher_id;
   int? voucher_value;
+  String user_id;
+  String user_name;
+  String user_email;
   pesanan({
     required this.created,
     required this.lastStatus,
@@ -20,6 +23,9 @@ class pesanan {
     required this.voucherApplied,
     this.voucher_id,
     this.voucher_value,
+    required this.user_id,
+    required this.user_name,
+    required this.user_email,
   });
 }
 

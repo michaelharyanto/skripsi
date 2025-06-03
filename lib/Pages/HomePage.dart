@@ -46,6 +46,7 @@ class _HomePageState extends State<HomePage> {
     h.getCartCount();
     if (GlobalVar.currentUser.user_role == 'tenant') {
       t.initHistory();
+      t.initTenantData();
     }
   }
 
