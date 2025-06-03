@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -17,6 +18,7 @@ class MenuFragment extends StatefulWidget {
 }
 
 class _MenuFragmentState extends State<MenuFragment> {
+  TextEditingController searchTF = TextEditingController();
   MenuFragmentController m = Get.put(MenuFragmentController());
   @override
   void initState() {
@@ -33,7 +35,10 @@ class _MenuFragmentState extends State<MenuFragment> {
           child: Column(
             children: [
               TextFormField(
-                // controller: emailTF,
+                controller: searchTF,
+                onChanged: (value) {
+                  m.searchMenu(value);
+                },
                 style: const TextStyle(
                     fontFamily: 'Poppins', fontWeight: FontWeight.w500),
                 decoration: InputDecoration(

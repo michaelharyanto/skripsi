@@ -9,6 +9,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:skripsi/Controllers/MenuDetailPageController.dart';
 import 'package:skripsi/Data%20Model/menu.dart';
 import 'package:skripsi/GlobalVar.dart';
+import 'package:skripsi/Pages/CartPage.dart';
 
 // ignore: must_be_immutable
 class MenuDetailPage extends StatefulWidget {
@@ -294,14 +295,14 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                                                       fontWeight:
                                                           FontWeight.w700),
                                                 ),
-                                               Text(
-                                                '0 ulasan',
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.black,
-                                                  fontFamily: 'Poppins',
+                                                Text(
+                                                  '0 ulasan',
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: Colors.black,
+                                                    fontFamily: 'Poppins',
+                                                  ),
                                                 ),
-                                              ),
                                               ],
                                             ),
                                             Row(
@@ -338,7 +339,8 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                                             ))),
                                           );
                                         },
-                                        physics: const NeverScrollableScrollPhysics(),
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
                                         shrinkWrap: true,
                                         itemCount:
                                             // product.value.reviews.length <= 3
@@ -374,20 +376,20 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                                                     fontWeight:
                                                         FontWeight.w700),
                                               ),
-                                               StreamBuilder(
-                                                    stream: FirebaseFirestore
-                                                        .instance
-                                                        .collection('menu list')
-                                                        .doc(widget.currentMenu
-                                                            .menu_id)
-                                                        .collection('reviews')
-                                                        .count()
-                                                        .get()
-                                                        .asStream(),
-                                                    builder:
-                                                        (context, countSnapshot) {
-                                                      if (countSnapshot.hasData) {
-                                                        return Text(
+                                              StreamBuilder(
+                                                  stream: FirebaseFirestore
+                                                      .instance
+                                                      .collection('menu list')
+                                                      .doc(widget
+                                                          .currentMenu.menu_id)
+                                                      .collection('reviews')
+                                                      .count()
+                                                      .get()
+                                                      .asStream(),
+                                                  builder:
+                                                      (context, countSnapshot) {
+                                                    if (countSnapshot.hasData) {
+                                                      return Text(
                                                         '${countSnapshot.data!.count} ulasan',
                                                         style: const TextStyle(
                                                           fontSize: 14,
@@ -395,8 +397,8 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                                                           fontFamily: 'Poppins',
                                                         ),
                                                       );
-                                                      }else{
-                                                        return const Text(
+                                                    } else {
+                                                      return const Text(
                                                         '0 ulasan',
                                                         style: TextStyle(
                                                           fontSize: 14,
@@ -404,9 +406,8 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                                                           fontFamily: 'Poppins',
                                                         ),
                                                       );
-                                                      }
-                                                    }),
-                                              
+                                                    }
+                                                  }),
                                             ],
                                           ),
                                           Row(
@@ -441,7 +442,7 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                                                 radix: 16)),
                                           ))),
                                           child: Padding(
-                                            padding: EdgeInsets.symmetric(
+                                            padding: const EdgeInsets.symmetric(
                                                 horizontal: 12, vertical: 10),
                                             child: Column(
                                               mainAxisSize: MainAxisSize.min,
@@ -497,7 +498,7 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                                                                             unSelectedColor:
                                                                                 Colors.grey,
                                                                             selectedColor: Color(int.parse("#FFF8D24C".replaceAll('#', ""), radix: 16)),
-                                                                            child: Icon(
+                                                                            child: const Icon(
                                                                               Icons.star,
                                                                               size: 20,
                                                                             ));
@@ -507,7 +508,7 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                                                                       itemCount:
                                                                           5),
                                                             ),
-                                                            SizedBox(width: 5),
+                                                            const SizedBox(width: 5),
                                                             Text(
                                                               '(${reviewData[index]['averageRating'].toDouble()})',
                                                               style: TextStyle(
@@ -568,7 +569,7 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                                                         (context, imageIndex) {
                                                       return Padding(
                                                         padding:
-                                                            EdgeInsets.only(
+                                                            const EdgeInsets.only(
                                                                 right: 10),
                                                         child: GestureDetector(
                                                           onTap: () {
@@ -630,7 +631,7 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                                           ),
                                         );
                                       },
-                                      physics: NeverScrollableScrollPhysics(),
+                                      physics: const NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
                                       itemCount: reviewData.length,
                                     ),
@@ -696,7 +697,7 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                     GlobalVar.cartCount.value <= 99
                         ? GlobalVar.cartCount.value.toString()
                         : '99+',
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontFamily: 'Poppins',
                         color: Colors.white,
                         fontWeight: FontWeight.w500),
@@ -705,6 +706,9 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                   offset: const Offset(8, -8),
                   backgroundColor: Colors.red,
                   child: GestureDetector(
+                    onTap: () {
+                      Get.to(const CartPage());
+                    },
                     child: Icon(
                       MdiIcons.cartOutline,
                       size: 28,

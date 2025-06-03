@@ -478,6 +478,7 @@ class CheckoutPageController extends GetxController {
             .doc(item);
         await ref.delete();
       }
+      // tambah push fcm
       Get.back();
       AwesomeDialog(
               context: context,

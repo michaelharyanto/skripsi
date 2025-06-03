@@ -5,7 +5,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
-import 'package:intl/date_symbol_data_file.dart';
 import 'package:skripsi/GlobalVar.dart';
 import 'package:skripsi/Pages/HomePage.dart';
 import 'package:skripsi/Pages/SplashScreen.dart';
@@ -28,15 +27,15 @@ class MyApp extends StatelessWidget {
     return KeyboardDismissOnTap(
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
-        locale: Locale('id'),
-        supportedLocales: [Locale('id')],
-        localizationsDelegates: [
+        locale: const Locale('id'),
+        supportedLocales: const [Locale('id')],
+        localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate
         ],
         builder: EasyLoading.init(),
-        getPages: [GetPage(name: '/homepage', page: () => HomePage())],
+        getPages: [GetPage(name: '/homepage', page: () => const HomePage())],
         theme: ThemeData(
           primaryColor: Colors.blue[300],
           textSelectionTheme: TextSelectionThemeData(
@@ -46,7 +45,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue[300]!),
           useMaterial3: true,
         ),
-        home: SplashScreen(),
+        home: const SplashScreen(),
       ),
     );
   }

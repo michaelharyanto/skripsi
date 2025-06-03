@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:skripsi/Controllers/HomePageController.dart';
+import 'package:skripsi/Controllers/TenantHistoryTabController.dart';
+import 'package:skripsi/Controllers/TenantHomeFragmentController.dart';
 import 'package:skripsi/Fragments/ChatroomListFragment.dart';
 import 'package:skripsi/Fragments/HistoryFragment.dart';
 import 'package:skripsi/Fragments/HomeFragment.dart';
 import 'package:skripsi/Fragments/MenuFragment.dart';
 import 'package:skripsi/Fragments/ProfileFragment.dart';
+import 'package:skripsi/Fragments/TenantHomeFragment.dart';
 import 'package:skripsi/Fragments/WishlistFragment.dart';
 import 'package:skripsi/GlobalVar.dart';
 
@@ -20,13 +23,18 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   HomePageController h = Get.put(HomePageController());
+  TenantHomeFragmentController t = Get.put(TenantHomeFragmentController());
   PageStorageBucket bucket = PageStorageBucket();
   List<Widget> fragments = [
-    const HomeFragment(),
-    const ChatroomListFragment(),
-    const HistoryFragment(),
     GlobalVar.currentUser.user_role == 'tenant'
-        ? MenuFragment()
+        ? const TenantHomeFragment()
+        : const HomeFragment(),
+    const ChatroomListFragment(),
+    GlobalVar.currentUser.user_role == 'tenant'
+        ? const TenantHistoryTabController()
+        : const HistoryFragment(),
+    GlobalVar.currentUser.user_role == 'tenant'
+        ? const MenuFragment()
         : const WishlistFragment(),
     const ProfileFragment()
   ];
@@ -36,6 +44,9 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     h.getCarrousel();
     h.getCartCount();
+    if (GlobalVar.currentUser.user_role == 'tenant') {
+      t.initHistory();
+    }
   }
 
   @override
@@ -78,20 +89,32 @@ class _HomePageState extends State<HomePage> {
                         ),
                         title: 'Chat',
                         fontFamily: 'Poppins'),
-                    TabItem(
-                        icon: const Icon(
-                          Icons.history,
-                          color: Colors.white,
-                        ),
-                        activeIcon: Icon(
-                          Icons.history,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                        title: 'Riwayat',
-                        fontFamily: 'Poppins'),
                     GlobalVar.currentUser.user_role == 'tenant'
                         ? TabItem(
-                            icon: Icon(
+                            icon: const Icon(
+                              Icons.local_restaurant,
+                              color: Colors.white,
+                            ),
+                            activeIcon: Icon(
+                              Icons.local_restaurant,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            title: 'Pesanan',
+                            fontFamily: 'Poppins')
+                        : TabItem(
+                            icon: const Icon(
+                              Icons.history,
+                              color: Colors.white,
+                            ),
+                            activeIcon: Icon(
+                              Icons.history,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            title: 'Riwayat',
+                            fontFamily: 'Poppins'),
+                    GlobalVar.currentUser.user_role == 'tenant'
+                        ? TabItem(
+                            icon: const Icon(
                               Icons.restaurant,
                               color: Colors.white,
                             ),

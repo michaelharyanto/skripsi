@@ -17,11 +17,17 @@ class HistoryFragment extends StatefulWidget {
 
 class _HistoryFragmentState extends State<HistoryFragment> {
   HistoryFragmentController h = Get.put(HistoryFragmentController());
+  ScrollController sc = ScrollController();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     h.initHistory();
+    sc.addListener(() {
+      if (sc.position.pixels == sc.position.maxScrollExtent) {
+        h.getMoreHistory();
+      }
+    });
   }
 
   @override
@@ -32,13 +38,14 @@ class _HistoryFragmentState extends State<HistoryFragment> {
         children: [
           Obx(() => Expanded(
                   child: ListView.builder(
+                controller: sc,
                 itemCount: h.historyList.length,
                 itemBuilder: (context, index) {
                   var order = h.historyList[index];
                   return Material(
                     child: InkWell(
                       onTap: () {
-                        Get.to(HistoryDetailPage(order_id: order.order_id));
+                        Get.to(HistoryDetailPage(order_id: order.order_id, detail: order.detail,));
                       },
                       child: Container(
                         color: Colors.grey[300],
@@ -70,7 +77,7 @@ class _HistoryFragmentState extends State<HistoryFragment> {
                                                             color: Colors.black,
                                                             fontFamily:
                                                                 'Poppins',
-                                                            fontSize: 14,
+                                                            fontSize: 12,
                                                             fontWeight:
                                                                 FontWeight
                                                                     .w700),
@@ -86,7 +93,7 @@ class _HistoryFragmentState extends State<HistoryFragment> {
                                                             color: Colors.black,
                                                             fontFamily:
                                                                 'Poppins',
-                                                            fontSize: 14,
+                                                            fontSize: 12,
                                                             fontWeight:
                                                                 FontWeight
                                                                     .w700),
@@ -149,6 +156,7 @@ class _HistoryFragmentState extends State<HistoryFragment> {
                                                         ' : ${order.tenant_name}',
                                                     style: const TextStyle(
                                                         color: Colors.black,
+                                                        fontWeight: FontWeight.w500,
                                                         fontFamily: 'Poppins',
                                                         fontSize: 14),
                                                   ),
@@ -201,7 +209,7 @@ class _HistoryFragmentState extends State<HistoryFragment> {
                                                             menu.currentMenu!
                                                                 .menu_name!,
                                                             textAlign: TextAlign
-                                                                .justify,
+                                                                .center,
                                                             maxLines: 2,
                                                             overflow:
                                                                 TextOverflow
@@ -230,8 +238,8 @@ class _HistoryFragmentState extends State<HistoryFragment> {
                                                       order.detail.length > 3,
                                                   child: Text(
                                                     '+${order.detail.length - 3} Menu Lainnya',
-                                                    style: const TextStyle(
-                                                        color: Colors.black,
+                                                    style: TextStyle(
+                                                        color: Theme.of(context).primaryColor,
                                                         fontWeight:
                                                             FontWeight.w700,
                                                         fontFamily: 'Poppins',
