@@ -8,8 +8,49 @@ import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:skripsi/Data%20Model/menu.dart';
 import 'package:skripsi/GlobalVar.dart';
+import 'package:skripsi/Widgets/PopUpLoading.dart';
 
 class MenuDetailPageController extends GetxController {
+  RxBool isWishlist = false.obs;
+
+  checkWishlist(String menu_id) async {
+    var doc = await FirebaseFirestore.instance 
+        .collection('users')
+        .doc(GlobalVar.currentUser.user_id)
+        .collection('wishlist')
+        .doc(menu_id)
+        .get();
+    if (doc.exists) {
+      isWishlist.value = true;
+    } else {
+      isWishlist.value = false;
+    }
+  }
+
+  addWishlist(BuildContext context, String menu_id) async {
+    PopUpLoading().showdialog(context);
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(GlobalVar.currentUser.user_id)
+        .collection('wishlist')
+        .doc(menu_id)
+        .set({'menu_id': menu_id});
+    isWishlist.value = true;
+    Get.back();
+  }
+
+  removeWishlist(BuildContext context, String menu_id) async {
+    PopUpLoading().showdialog(context);
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(GlobalVar.currentUser.user_id)
+        .collection('wishlist')
+        .doc(menu_id)
+        .delete();
+    isWishlist.value = false;
+    Get.back();
+  }
+
   showBuyModal(BuildContext context, menu menu) {
     TextEditingController quantityTF = TextEditingController();
     quantityTF.text = '1';

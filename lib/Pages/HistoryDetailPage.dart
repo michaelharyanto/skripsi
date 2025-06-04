@@ -627,13 +627,10 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(
+                                          const Text(
                                             'Subtotal',
                                             style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .primaryTextTheme
-                                                    .headlineLarge!
-                                                    .color,
+                                                color: Colors.black,
                                                 fontFamily: 'Poppins',
                                                 fontWeight: FontWeight.w500,
                                                 fontSize: 14),
@@ -645,11 +642,8 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                                                 decimalDigits: 0,
                                                 symbol: 'Rp',
                                               ).format(totalPrice.value),
-                                              style: TextStyle(
-                                                  color: Theme.of(context)
-                                                      .primaryTextTheme
-                                                      .headlineLarge!
-                                                      .color,
+                                              style: const TextStyle(
+                                                  color: Colors.black,
                                                   fontFamily: 'Poppins',
                                                   fontWeight: FontWeight.w500,
                                                   fontSize: 14)),
@@ -665,13 +659,10 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(
+                                          const Text(
                                             'Voucher',
                                             style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .primaryTextTheme
-                                                    .headlineLarge!
-                                                    .color,
+                                                color: Colors.black,
                                                 fontFamily: 'Poppins',
                                                 fontWeight: FontWeight.w500,
                                                 fontSize: 14),
@@ -696,13 +687,10 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
+                                      const Text(
                                         'Total Akhir',
                                         style: TextStyle(
-                                            color: Theme.of(context)
-                                                .primaryTextTheme
-                                                .headlineLarge!
-                                                .color,
+                                            color: Colors.black,
                                             fontFamily: 'Poppins',
                                             fontWeight: FontWeight.w700,
                                             fontSize: 16),
@@ -717,11 +705,8 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                                               ? totalPrice.value -
                                                   orderData['voucher_value']
                                               : totalPrice.value),
-                                          style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .primaryTextTheme
-                                                  .headlineLarge!
-                                                  .color,
+                                          style: const TextStyle(
+                                              color: Colors.black,
                                               fontFamily: 'Poppins',
                                               fontWeight: FontWeight.w700,
                                               fontSize: 16))),
@@ -741,13 +726,10 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           'Status Pesanan',
                           style: TextStyle(
-                              color: Theme.of(context)
-                                  .primaryTextTheme
-                                  .headlineLarge!
-                                  .color,
+                              color: Colors.black,
                               fontFamily: 'Poppins',
                               fontWeight: FontWeight.w700,
                               fontSize: 18),
@@ -1054,9 +1036,9 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                               snapshot.data!.docs.length <= 99
                                   ? snapshot.data!.docs.length.toString()
                                   : '99+',
-                              style: TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.white),
                             ),
-                            offset: Offset(15, -15),
+                            offset: const Offset(15, -15),
                             isLabelVisible:
                                 (snapshot.data!.docs.isNotEmpty) ? true : false,
                             backgroundColor: Colors.red,

@@ -40,8 +40,13 @@ class AddReviewPage extends StatelessWidget {
                 } else {
                   if (snapshot.data!.data() == null) {
                     return InkWell(
-                      onTap: () {a.showReviewModal(
-                            context, menuData.currentMenu!.menu_name!);},
+                      onTap: () {
+                        a.showReviewModal(
+                            context,
+                            menuData.currentMenu!.menu_name!,
+                            menuData.menu_id,
+                            order_id);
+                      },
                       child: Container(
                         decoration: const BoxDecoration(
                             border:
@@ -179,7 +184,7 @@ class AddReviewPage extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 5,
                                   ),
                                   RatingBar.builder(
@@ -192,11 +197,9 @@ class AddReviewPage extends StatelessWidget {
                                     unratedColor: Colors.grey,
                                     ignoreGestures: true,
                                     itemSize: 20,
-                                    itemBuilder: (context, _) => Icon(
+                                    itemBuilder: (context, _) => const Icon(
                                         Icons.star,
-                                        color: Color(int.parse(
-                                            "#FFF8D24C".replaceAll('#', ""),
-                                            radix: 16))),
+                                        color: Color(0xFFF8D24C)),
                                     onRatingUpdate: (double value) {},
                                   ),
                                 ],
@@ -210,7 +213,10 @@ class AddReviewPage extends StatelessWidget {
                     return InkWell(
                       onTap: () {
                         a.showReviewModal(
-                            context, menuData.currentMenu!.menu_name!);
+                            context,
+                            menuData.currentMenu!.menu_name!,
+                            menuData.menu_id,
+                            order_id);
                       },
                       child: Container(
                         decoration: const BoxDecoration(
@@ -358,14 +364,10 @@ class AddReviewPage extends StatelessWidget {
                                                 .data()!['rating']
                                                 .toDouble(),
                                             itemBuilder: (p0, p1) {
-                                              return rating.RatingWidget(
+                                              return const rating.RatingWidget(
                                                   unSelectedColor: Colors.grey,
-                                                  selectedColor: Color(
-                                                      int.parse(
-                                                          "#FFF8D24C"
-                                                              .replaceAll(
-                                                                  '#', ""),
-                                                          radix: 16)),
+                                                  selectedColor:
+                                                      Color(0xFFF8D24C),
                                                   child: Icon(
                                                     Icons.star,
                                                     size: 20,
@@ -373,16 +375,13 @@ class AddReviewPage extends StatelessWidget {
                                             },
                                             itemCount: 5),
                                       ),
-                                      SizedBox(width: 5),
+                                      const SizedBox(width: 5),
                                       Text(
                                           "(${snapshot.data!.data()!['rating']})",
                                           style: TextStyle(
-                                              fontFamily: 'SF-Pro-Display',
-                                              color: Theme.of(context)
-                                                  .primaryTextTheme
-                                                  .headlineLarge!
-                                                  .color,
-                                              fontWeight: FontWeight.w600,
+                                              fontFamily: 'Poppins',
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w700,
                                               fontSize: 14))
                                     ],
                                   ),

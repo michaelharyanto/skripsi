@@ -55,3 +55,43 @@ class voucher {
     };
   }
 }
+
+class review {
+  String comment;
+  String created;
+  String createdBy;
+  String createdByName;
+  String image;
+  double rating;
+
+  review({
+    required this.comment,
+    required this.created,
+    required this.createdBy,
+    required this.createdByName,
+    required this.image,
+    required this.rating,
+  });
+
+  factory review.fromJson(Map<String, dynamic> json) {
+    return review(
+      comment: json['comment'] ?? '',
+      created: json['created'] ?? '',
+      createdBy: json['createdBy'] ?? '',
+      createdByName: json['createdByName'] ?? '',
+      image: json['image'] ?? '',
+      rating: (json['rating'] ?? 0).toDouble(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'comment': comment,
+      'created': created,
+      'createdBy': createdBy,
+      'createdByName': createdByName,
+      'image': image,
+      'rating': rating,
+    };
+  }
+}

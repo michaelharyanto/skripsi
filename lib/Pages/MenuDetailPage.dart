@@ -11,6 +11,8 @@ import 'package:skripsi/Controllers/MenuDetailPageController.dart';
 import 'package:skripsi/Data%20Model/menu.dart';
 import 'package:skripsi/GlobalVar.dart';
 import 'package:skripsi/Pages/CartPage.dart';
+import 'package:skripsi/Pages/ReviewListPage.dart';
+import 'package:skripsi/Widgets/HeroPhotoView.dart';
 
 // ignore: must_be_immutable
 class MenuDetailPage extends StatefulWidget {
@@ -23,6 +25,13 @@ class MenuDetailPage extends StatefulWidget {
 
 class _MenuDetailPageState extends State<MenuDetailPage> {
   MenuDetailPageController m = Get.put(MenuDetailPageController());
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    m.checkWishlist(widget.currentMenu.menu_id!);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,9 +59,14 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                     decoration: BoxDecoration(
                         color: const Color(0xFFD9D9D9).withOpacity(0.4)),
                     child: GestureDetector(
-                      onTap: () {},
-                      child:
-                          CachedNetworkImage(imageUrl: menuData['menu_image']),
+                      onTap: () {
+                        Get.to(HeroPhotoView(
+                            imagePath: menuData['menu_image'], tag: 'image'));
+                      },
+                      child: Hero(
+                          tag: 'image',
+                          child: CachedNetworkImage(
+                              imageUrl: menuData['menu_image'])),
                     ),
                   ),
                   Padding(
@@ -60,7 +74,7 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                         vertical: 10, horizontal: 12),
                     child: Column(
                       children: [
-                        const Row(
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
@@ -70,6 +84,34 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                                   color: Colors.black,
                                   fontFamily: 'Poppins',
                                   fontWeight: FontWeight.w700),
+                            ),
+                            AnimatedSwitcher(
+                              duration: Duration(milliseconds: 100),
+                              transitionBuilder: (child, animation) {
+                                return ScaleTransition(
+                                  scale: animation,
+                                  child: child,
+                                );
+                              },
+                              child: Obx(() => IconButton(
+                                  onPressed: () {
+                                    if (!m.isWishlist.value) {
+                                      m.addWishlist(
+                                          context, widget.currentMenu.menu_id!);
+                                    } else {
+                                      m.removeWishlist(
+                                          context, widget.currentMenu.menu_id!);
+                                    }
+                                  },
+                                  icon: Icon(
+                                    m.isWishlist.value
+                                        ? MdiIcons.heart
+                                        : MdiIcons.heartOutline,
+                                    size: 24,
+                                    color: m.isWishlist.value
+                                        ? Theme.of(context).primaryColor
+                                        : Colors.grey,
+                                  ))),
                             )
                           ],
                         ),
@@ -223,7 +265,8 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                               padding: const EdgeInsets.symmetric(vertical: 5),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   const Expanded(
                                       child: Text(
@@ -438,12 +481,10 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                                     ListView.builder(
                                       itemBuilder: (context, index) {
                                         return Container(
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                               border: Border(
                                                   bottom: BorderSide(
-                                            color: Color(int.parse(
-                                                "#FF979797".replaceAll('#', ""),
-                                                radix: 16)),
+                                            color: Colors.grey,
                                           ))),
                                           child: Padding(
                                             padding: const EdgeInsets.symmetric(
@@ -466,8 +507,8 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                                                               .start,
                                                       children: [
                                                         Text(
-                                                          reviewData[index]
-                                                                  ['sentByName']
+                                                          reviewData[index][
+                                                                  'createdByName']
                                                               .toString()
                                                               .replaceAllMapped(
                                                                   RegExp(
@@ -478,12 +519,15 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                                                                     .group(0)!
                                                                     .length;
                                                           }),
-                                                          style: TextStyle(
-                                                              color: Theme.of(
-                                                                      context)
-                                                                  .primaryTextTheme
-                                                                  .headlineLarge!
-                                                                  .color),
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontFamily:
+                                                                      'Poppins',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color: Colors
+                                                                      .black),
                                                         ),
                                                         Row(
                                                           children: [
@@ -493,16 +537,16 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                                                                   .builder(
                                                                       rate: reviewData[index]
                                                                               [
-                                                                              'averageRating']
+                                                                              'rating']
                                                                           .toDouble(),
                                                                       itemBuilder:
                                                                           (p0,
                                                                               p1) {
-                                                                        return RatingWidget(
+                                                                        return const RatingWidget(
                                                                             unSelectedColor:
                                                                                 Colors.grey,
-                                                                            selectedColor: Color(int.parse("#FFF8D24C".replaceAll('#', ""), radix: 16)),
-                                                                            child: const Icon(
+                                                                            selectedColor: Color(0xFFF8D24C),
+                                                                            child: Icon(
                                                                               Icons.star,
                                                                               size: 20,
                                                                             ));
@@ -515,13 +559,15 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                                                             const SizedBox(
                                                                 width: 5),
                                                             Text(
-                                                              '(${reviewData[index]['averageRating'].toDouble()})',
-                                                              style: TextStyle(
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .primaryTextTheme
-                                                                      .headlineLarge!
-                                                                      .color),
+                                                              '(${reviewData[index]['rating'].toDouble()})',
+                                                              style: const TextStyle(
+                                                                  fontFamily:
+                                                                      'Poppins',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color: Colors
+                                                                      .black),
                                                             ),
                                                           ],
                                                         ),
@@ -534,13 +580,12 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                                                                   'yyyy-MM-dd HH:mm:ss')
                                                               .parse(reviewData[
                                                                       index]
-                                                                  ['sentAt'])),
-                                                      style: TextStyle(
-                                                          color: Theme.of(
-                                                                  context)
-                                                              .primaryTextTheme
-                                                              .headlineLarge!
-                                                              .color),
+                                                                  ['created'])),
+                                                      style: const TextStyle(
+                                                          fontFamily: 'Poppins',
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: Colors.black),
                                                     ),
                                                   ],
                                                 ),
@@ -554,18 +599,17 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                                                         .symmetric(vertical: 5),
                                                     child: Text(
                                                       '${reviewData[index]['comment']}',
-                                                      style: TextStyle(
-                                                          color: Theme.of(
-                                                                  context)
-                                                              .primaryTextTheme
-                                                              .headlineLarge!
-                                                              .color),
+                                                      style: const TextStyle(
+                                                          fontFamily: 'Poppins',
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: Colors.black),
                                                     ),
                                                   ),
                                                 ),
                                                 Container(
                                                   height: reviewData[index]
-                                                              ['images']
+                                                              ['image']
                                                           .isEmpty
                                                       ? 0
                                                       : 120,
@@ -579,6 +623,15 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                                                                 right: 10),
                                                         child: GestureDetector(
                                                           onTap: () {
+                                                            Get.to(
+                                                                HeroPhotoView(
+                                                              imagePath:
+                                                                  reviewData[
+                                                                          index]
+                                                                      ['image'],
+                                                              tag:
+                                                                  '$index - $imageIndex',
+                                                            ));
                                                             // Navigator.push(
                                                             //     context,
                                                             //     MaterialPageRoute(
@@ -600,22 +653,18 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                                                             height: 120,
                                                             decoration: BoxDecoration(
                                                                 border: Border.all(
-                                                                    color: Color(int.parse(
-                                                                        "#FF979797".replaceAll(
-                                                                            '#',
-                                                                            ""),
-                                                                        radix:
-                                                                            16)))),
+                                                                    color: Colors
+                                                                        .grey)),
                                                             child: Hero(
                                                               tag:
-                                                                  '${index} - ${imageIndex}',
+                                                                  '$index - $imageIndex',
                                                               child:
-                                                                  Image.network(
-                                                                reviewData[index]
+                                                                  CachedNetworkImage(
+                                                                imageUrl:
+                                                                    reviewData[
+                                                                            index]
                                                                         [
-                                                                        'images']
-                                                                    [
-                                                                    imageIndex],
+                                                                        'image'],
                                                                 fit: BoxFit
                                                                     .cover,
                                                               ),
@@ -624,9 +673,7 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                                                         ),
                                                       );
                                                     },
-                                                    itemCount: reviewData[index]
-                                                            ['images']
-                                                        .length,
+                                                    itemCount: 1,
                                                     scrollDirection:
                                                         Axis.horizontal,
                                                     shrinkWrap: true,
@@ -645,7 +692,37 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                                   ],
                                 );
                               }
-                            })
+                            }),
+                        GestureDetector(
+                          onTap: () {
+                            Get.to(ReviewListPage(
+                                menu_id: widget.currentMenu.menu_id!));
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            decoration: const BoxDecoration(
+                                border: Border(
+                                    bottom: BorderSide(color: Colors.grey))),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Lihat Semua Ulasan',
+                                  style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14),
+                                ),
+                                Icon(
+                                  Icons.chevron_right,
+                                  size: 24,
+                                  color: Theme.of(context).primaryColor,
+                                )
+                              ],
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   )
