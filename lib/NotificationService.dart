@@ -11,9 +11,7 @@ class NotificationService {
       FlutterLocalNotificationsPlugin();
 
   static Future<String> getAccessToken() async {
-    // Your client ID and client secret obtained from Google Cloud Console
     
-
     List<String> scopes = [
       "https://www.googleapis.com/auth/userinfo.email",
       "https://www.googleapis.com/auth/firebase.database",
