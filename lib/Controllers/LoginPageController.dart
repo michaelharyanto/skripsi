@@ -42,7 +42,7 @@ class LoginPageController extends GetxController {
             userData['user_email'],
             userData['phone_number']);
         GlobalVar.currentUser = (await DatabaseController().getUser())!;
-        Get.offAll(HomePage());
+        Get.offAll(HomePage(animateToIndex: null,));
       }
     } on FirebaseAuthException catch (e) {
       print(e);

@@ -150,14 +150,17 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                 trailing: const Icon(
                   Icons.chevron_right,
                   size: 24,
-                  color: Colors.grey, 
+                  color: Colors.grey,
                 ),
               )
             ],
           ),
         ),
       )),
-      appBar: AppBar(backgroundColor: Colors.transparent,),
+      appBar: AppBar(
+        surfaceTintColor: Colors.transparent,
+        backgroundColor: Colors.transparent,
+      ),
     );
   }
 }

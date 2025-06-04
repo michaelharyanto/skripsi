@@ -9,6 +9,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:skripsi/Controllers/MenuFragmentController.dart';
 import 'package:skripsi/Pages/AddMenuPage.dart';
 import 'package:skripsi/Pages/EditMenuPage.dart';
+import 'package:skripsi/Pages/MenuDetailPage.dart';
 
 class MenuFragment extends StatefulWidget {
   const MenuFragment({super.key});
@@ -25,7 +26,7 @@ class _MenuFragmentState extends State<MenuFragment> {
   void initState() {
     super.initState();
     m.initMenu();
-    sc.addListener(() { 
+    sc.addListener(() {
       if (sc.position.pixels == sc.position.maxScrollExtent) {
         m.getMoreMenu();
       }
@@ -70,181 +71,185 @@ class _MenuFragmentState extends State<MenuFragment> {
               ),
               Obx(() => Expanded(
                       child: ListView.builder(
-                        controller: sc,
+                    controller: sc,
                     itemCount: m.menuList.length,
                     itemBuilder: (context, index) {
                       var menu = m.menuList[index];
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 12),
-                        child: Material(
-                          color: Colors.white,
-                          elevation: 5,
-                          borderRadius: BorderRadius.circular(8),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 8),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8)),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                    flex: 1,
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 80,
-                                          width: 80,
-                                          child: CachedNetworkImage(
-                                              color: (menu.menu_stock == 0 ||
-                                                      !(menu.isActive!.value))
-                                                  ? Colors.grey[400]
-                                                  : Colors.transparent,
-                                              colorBlendMode:
-                                                  BlendMode.saturation,
-                                              fit: BoxFit.fill,
-                                              imageUrl: menu.menu_image!),
-                                        ),
-                                        IconButton(
-                                            onPressed: () {
-                                              Get.to(EditMenuPage(
-                                                  currentMenu: menu));
-                                            },
-                                            icon: Icon(
-                                              MdiIcons.pencil,
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                            ))
-                                      ],
-                                    )),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Expanded(
-                                    flex: 3,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          menu.menu_name!,
-                                          style: const TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.black,
-                                              fontFamily: 'Poppins',
-                                              fontWeight: FontWeight.w700),
-                                        ),
-                                        const SizedBox(
-                                          height: 4,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              NumberFormat.currency(
-                                                      locale: 'id_ID',
-                                                      decimalDigits: 0,
-                                                      symbol: 'Rp')
-                                                  .format(menu.menu_price),
-                                              style: const TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.black,
-                                                  fontFamily: 'Poppins',
-                                                  fontWeight: FontWeight.w700),
-                                            ),
-                                            CupertinoSwitch(
-                                              value: menu.isActive!.value,
-                                              onChanged: (value) {
-                                                FirebaseFirestore.instance
-                                                    .collection('menu list')
-                                                    .doc(menu.menu_id)
-                                                    .update(
-                                                        {'isActive': value});
+                        child: InkWell(
+                          onTap: () {
+                            Get.to(MenuDetailPage(currentMenu: menu));
+                          },
+                          child: Material(
+                            elevation: 5,
+                            borderRadius: BorderRadius.circular(8),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 8),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8)),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                      flex: 1,
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 80,
+                                            width: 80,
+                                            child: CachedNetworkImage(
+                                                color: (menu.menu_stock == 0 ||
+                                                        !(menu.isActive!.value))
+                                                    ? Colors.grey[400]
+                                                    : Colors.transparent,
+                                                colorBlendMode:
+                                                    BlendMode.saturation,
+                                                fit: BoxFit.fill,
+                                                imageUrl: menu.menu_image!),
+                                          ),
+                                          IconButton(
+                                              onPressed: () {
+                                                Get.to(EditMenuPage(
+                                                    currentMenu: menu));
                                               },
-                                            )
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 4,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'Stok: ${menu.menu_stock}',
-                                              style: const TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.black,
-                                                  fontFamily: 'Poppins',
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                            Visibility(
-                                                visible: menu.menu_stock! <= 0,
+                                              icon: Icon(
+                                                MdiIcons.pencil,
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                              ))
+                                        ],
+                                      )),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                      flex: 3,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            menu.menu_name!,
+                                            style: const TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.black,
+                                                fontFamily: 'Poppins',
+                                                fontWeight: FontWeight.w700),
+                                          ),
+                                          const SizedBox(
+                                            height: 4,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                NumberFormat.currency(
+                                                        locale: 'id_ID',
+                                                        decimalDigits: 0,
+                                                        symbol: 'Rp')
+                                                    .format(menu.menu_price),
+                                                style: const TextStyle(
+                                                    fontSize: 14,
+                                                    color: Colors.black,
+                                                    fontFamily: 'Poppins',
+                                                    fontWeight: FontWeight.w700),
+                                              ),
+                                              CupertinoSwitch(
+                                                value: menu.isActive!.value,
+                                                onChanged: (value) {
+                                                  FirebaseFirestore.instance
+                                                      .collection('menu list')
+                                                      .doc(menu.menu_id)
+                                                      .update(
+                                                          {'isActive': value});
+                                                },
+                                              )
+                                            ],
+                                          ),
+                                          const SizedBox(
+                                            height: 4,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Stok: ${menu.menu_stock}',
+                                                style: const TextStyle(
+                                                    fontSize: 14,
+                                                    color: Colors.black,
+                                                    fontFamily: 'Poppins',
+                                                    fontWeight: FontWeight.w500),
+                                              ),
+                                              Visibility(
+                                                  visible: menu.menu_stock! <= 0,
+                                                  child: Container(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        vertical: 5,
+                                                        horizontal: 8),
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.red,
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                                5)),
+                                                    child: const Text(
+                                                      'STOK HABIS',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          fontFamily: 'Poppins',
+                                                          fontSize: 14,
+                                                          color: Colors.white),
+                                                    ),
+                                                  )),
+                                            ],
+                                          ),
+                                          const SizedBox(
+                                            height: 4,
+                                          ),
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                  child: InkWell(
+                                                onTap: () {
+                                                  m.showEditModal(context, menu);
+                                                },
                                                 child: Container(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                      vertical: 5,
-                                                      horizontal: 8),
+                                                  height: 40,
                                                   decoration: BoxDecoration(
-                                                      color: Colors.red,
+                                                      color: Colors.white,
+                                                      border: Border.all(
+                                                          color: const Color(
+                                                              0xFFA8AAB7)),
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              5)),
-                                                  child: const Text(
-                                                    'STOK HABIS',
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        fontFamily: 'Poppins',
-                                                        fontSize: 14,
-                                                        color: Colors.white),
-                                                  ),
-                                                )),
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 4,
-                                        ),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                                child: InkWell(
-                                              onTap: () {
-                                                m.showEditModal(context, menu);
-                                              },
-                                              child: Container(
-                                                height: 40,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    border: Border.all(
-                                                        color: const Color(
-                                                            0xFFA8AAB7)),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8)),
-                                                child: const Center(
-                                                  child: Text(
-                                                    'Ubah Stok',
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        fontFamily: 'Poppins',
-                                                        color: Colors.grey),
+                                                              8)),
+                                                  child: const Center(
+                                                    child: Text(
+                                                      'Ubah Stok',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontFamily: 'Poppins',
+                                                          color: Colors.grey),
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                            )),
-                                          ],
-                                        )
-                                      ],
-                                    ))
-                              ],
+                                              )),
+                                            ],
+                                          )
+                                        ],
+                                      ))
+                                ],
+                              ),
                             ),
                           ),
                         ),

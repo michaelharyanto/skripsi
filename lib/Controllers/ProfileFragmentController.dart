@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:skripsi/Controllers/DatabaseController.dart';
+import 'package:skripsi/GlobalVar.dart';
 import 'package:skripsi/Pages/LoginPage.dart';
 
 class ProfileFragmentController extends GetxController {
@@ -110,6 +111,7 @@ class ProfileFragmentController extends GetxController {
 
   logout() {
     DatabaseController().logOut();
+    GlobalVar.currentNavBarIndex.value = 0;
     Get.offAll(const LoginPage());
   }
 }

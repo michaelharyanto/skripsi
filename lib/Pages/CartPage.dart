@@ -204,7 +204,9 @@ class _CartPageState extends State<CartPage> {
                                                                       iconSize:
                                                                           24,
                                                                       onPressed:
-                                                                          () {},
+                                                                          () {
+                                                                            c.showDeleteModal(context, currentMenu.menu_id);
+                                                                          },
                                                                       color: Theme.of(
                                                                               context)
                                                                           .primaryColor,

@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -16,7 +17,19 @@ class TenantHomeFragment extends StatefulWidget {
 }
 
 class _TenantHomeFragmentState extends State<TenantHomeFragment> {
+  ScrollController sc = ScrollController();
   TenantHomeFragmentController t = Get.put(TenantHomeFragmentController());
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    sc.addListener(() {
+      if (sc.position.pixels == sc.position.maxScrollExtent) {
+        t.getMoreHistory();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +149,7 @@ class _TenantHomeFragmentState extends State<TenantHomeFragment> {
                     child: Align(
                       alignment: Alignment.topLeft,
                       child: Obx(() => Text(
-                            'Pesanan Baru (${t.historyList.length})',
+                            'Pesanan Baru (${t.orderCount.value})',
                             style: const TextStyle(
                                 fontSize: 16,
                                 color: Colors.black,
@@ -150,7 +163,7 @@ class _TenantHomeFragmentState extends State<TenantHomeFragment> {
                   ),
                   Obx(() => Expanded(
                           child: ListView.builder(
-                        // controller: sc,
+                        controller: sc,
                         itemCount: t.historyList.length,
                         itemBuilder: (context, index) {
                           var order = t.historyList[index];
@@ -474,6 +487,7 @@ class _TenantHomeFragmentState extends State<TenantHomeFragment> {
         ],
       )),
       appBar: AppBar(
+        surfaceTintColor: Colors.transparent,
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           '${t.changeGreetings(DateTime.now())} ${GlobalVar.currentUser.user_name}',

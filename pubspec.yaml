@@ -60,6 +60,7 @@ dependencies:
   shimmer: ^3.0.0
   flutter_easyloading: ^3.0.5
   flutter_pannable_rating_bar: ^2.7.2+1
+  flutter_rating_bar: ^4.0.1
   dotted_border: ^2.1.0
   animated_visibility: ^0.0.4
   image_picker: ^0.8.7+4
@@ -70,6 +71,9 @@ dependencies:
   toggle_switch: ^2.3.0
   timeline_tile: ^2.0.0
   marquee: 
+  permission_handler: ^11.3.1
+  googleapis: ^13.1.0
+  googleapis_auth: ^1.5.1
   
 
 dev_dependencies:

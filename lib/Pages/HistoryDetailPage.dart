@@ -2,12 +2,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:skripsi/Controllers/HistoryDetailPageController.dart';
 import 'package:skripsi/Data%20Model/menu.dart';
 import 'package:skripsi/GlobalVar.dart';
+import 'package:skripsi/Pages/AddReviewPage.dart';
+import 'package:skripsi/Pages/ChatroomPage.dart';
 import 'package:skripsi/Widgets/TimelineMaker.dart';
 
 // ignore: must_be_immutable
@@ -793,6 +796,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                                                           .languageCode)
                                                   .format(DateTime.tryParse(
                                                       reverse[index]['date'])!),
+                                              textAlign: TextAlign.end,
                                               style: const TextStyle(
                                                   fontFamily: 'Poppins',
                                                   fontWeight: FontWeight.w700,
@@ -834,9 +838,11 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                                     child: InkWell(
                                         onTap: () async {
                                           h.readyOrder(
-                                                  orderData['order_id'],
-                                                  orderData['timeline'],
-                                                  context);
+                                              orderData['order_id'],
+                                              orderData['user_id'],
+                                              orderData['user_email'],
+                                              orderData['timeline'],
+                                              context);
                                         },
                                         child: Container(
                                           height: 50,
@@ -903,6 +909,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                                                   orderData['order_id'],
                                                   orderData['timeline'],
                                                   orderData['user_email'],
+                                                  orderData['user_id'],
                                                   widget.detail,
                                                   orderData['voucherApplied']);
                                             },
@@ -979,7 +986,12 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                         children: [
                           Expanded(
                               child: InkWell(
-                                  onTap: () async {},
+                                  onTap: () async {
+                                    Get.to(AddReviewPage(
+                                      items: widget.detail,
+                                      order_id: widget.order_id,
+                                    ));
+                                  },
                                   child: Container(
                                     height: 50,
                                     decoration: BoxDecoration(
@@ -1020,7 +1032,51 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                 ],
               ),
               actions: [
-                IconButton(onPressed: () {}, icon: Icon(MdiIcons.chat))
+                StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('pesanan')
+                        .doc(widget.order_id)
+                        .collection('chatroom')
+                        .where('isRead', isEqualTo: false)
+                        .where('sender',
+                            isNotEqualTo: GlobalVar.currentUser.user_email)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return IconButton(
+                            onPressed: () {}, icon: Icon(MdiIcons.chat));
+                      } else {
+                        return Visibility(
+                          visible: orderData['lastStatus'] != 'REJECTED' &&
+                              orderData['lastStatus'] != 'COMPLETED',
+                          child: Badge(
+                            label: Text(
+                              snapshot.data!.docs.length <= 99
+                                  ? snapshot.data!.docs.length.toString()
+                                  : '99+',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            offset: Offset(15, -15),
+                            isLabelVisible:
+                                (snapshot.data!.docs.isNotEmpty) ? true : false,
+                            backgroundColor: Colors.red,
+                            alignment: Alignment.center,
+                            child: IconButton(
+                                onPressed: () {
+                                  Get.to(ChatroomPage(
+                                    order_id: orderData['order_id'],
+                                    user_name:
+                                        GlobalVar.currentUser.user_role ==
+                                                'tenant'
+                                            ? orderData['user_name']
+                                            : orderData['tenant_name'],
+                                  ));
+                                },
+                                icon: Icon(MdiIcons.chat)),
+                          ),
+                        );
+                      }
+                    })
               ],
             ),
           );

@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:ntp/ntp.dart';
 import 'package:skripsi/Data%20Model/menu.dart';
+import 'package:skripsi/NotificationService.dart';
 import 'package:skripsi/Widgets/PopUpLoading.dart';
 
 class HistoryDetailPageController extends GetxController {
@@ -47,8 +48,14 @@ class HistoryDetailPageController extends GetxController {
     Get.offAllNamed('/homepage');
   }
 
-  showRejectModal(BuildContext context, String orderID, List<dynamic> timeline,
-      String orderEmail, List<cart> foods, bool voucherApplied) {
+  showRejectModal(
+      BuildContext context,
+      String orderID,
+      List<dynamic> timeline,
+      String orderEmail,
+      String user_id,
+      List<cart> foods,
+      bool voucherApplied) {
     TextEditingController rejectTF = TextEditingController();
     valid.value = false;
     showModalBottomSheet(
@@ -211,6 +218,7 @@ class HistoryDetailPageController extends GetxController {
                                   orderID,
                                   timeline,
                                   orderEmail,
+                                  user_id,
                                   foods,
                                   rejectTF.text,
                                   voucherApplied);
@@ -249,6 +257,7 @@ class HistoryDetailPageController extends GetxController {
       String orderID,
       List<dynamic> timeline,
       String orderEmail,
+      String user_id,
       List<cart> foods,
       String reason,
       bool voucherApplied) async {
@@ -270,7 +279,7 @@ class HistoryDetailPageController extends GetxController {
       }
 
       DocumentReference userRef =
-          FirebaseFirestore.instance.collection('users').doc(orderEmail);
+          FirebaseFirestore.instance.collection('users').doc(user_id);
       DocumentSnapshot userSnapshot = await transaction.get(userRef);
 
       // Now, proceed with all the writes after reading
@@ -322,7 +331,16 @@ class HistoryDetailPageController extends GetxController {
         }
       }
     });
-    // tambahkan fcm
+    var data =
+        await FirebaseFirestore.instance.collection('users').doc(user_id).get();
+    if (data.data()!.containsKey('fcm_token')) {
+      var token = data.data()!['fcm_token'];
+      String message = voucherApplied
+          ? 'Hi $orderEmail, Pesanan Anda ($orderID) tidak dapat diproses. Vouchernya sudah dikembalikan padamu.'
+          : 'Hi $orderEmail, Pesanan Anda ($orderID) tidak dapat diproses.';
+      await NotificationService().sendNotif(
+          token, orderID, message, 'Pesanan Ditolak', 'order_tolak', null);
+    }
     AwesomeDialog(
       // ignore: use_build_context_synchronously
       context: context,
@@ -341,8 +359,8 @@ class HistoryDetailPageController extends GetxController {
     Get.offAllNamed('/homepage');
   }
 
-  readyOrder(
-      String order_id, List<dynamic> timeline, BuildContext context) async {
+  readyOrder(String order_id, String user_id, String orderEmail,
+      List<dynamic> timeline, BuildContext context) async {
     PopUpLoading().showdialog(context);
     var today = await NTP.now();
     String currentDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(today);
@@ -351,6 +369,19 @@ class HistoryDetailPageController extends GetxController {
         .collection('pesanan')
         .doc(order_id)
         .update({'timeline': timeline, 'lastStatus': 'READY'});
+    var data =
+        await FirebaseFirestore.instance.collection('users').doc(user_id).get();
+    if (data.data()!.containsKey('fcm_token')) {
+      var token = data.data()!['fcm_token'];
+
+      await NotificationService().sendNotif(
+          token,
+          order_id,
+          'Hi $orderEmail, Pesanan Anda ($order_id) sudah siap diambil!',
+          'Pesanan Siap Diambil',
+          'order_tolak',
+          null);
+    }
     // tambahkan fcm
     AwesomeDialog(
       // ignore: use_build_context_synchronously

@@ -42,12 +42,14 @@ class TimelineMaker extends StatelessWidget {
             alignment: Alignment.center,
             child: DefaultTextStyle(
                 style: TextStyle(
-                  color: isCompelete
-                      ? Colors.green
-                      : isPast
-                          ? Color(int.parse("#FF979797".replaceAll('#', ""),
-                              radix: 16))
-                          : Theme.of(context).primaryColor,
+                  color: !isClosed
+                      ? isCompelete
+                          ? Colors.green
+                          : isPast
+                              ? Color(int.parse("#FF979797".replaceAll('#', ""),
+                                  radix: 16))
+                              : Theme.of(context).primaryColor
+                      : Colors.red,
                 ),
                 child: endChild)),
         indicatorStyle: IndicatorStyle(
@@ -60,7 +62,7 @@ class TimelineMaker extends StatelessWidget {
                       radius: 15,
                       child: CircleAvatar(
                         backgroundColor:
-                            Theme.of(context).expansionTileTheme.iconColor,
+                            Colors.white,
                         radius: 10,
                         child: CircleAvatar(
                           backgroundColor: isCompelete

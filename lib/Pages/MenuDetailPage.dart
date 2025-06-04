@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_pannable_rating_bar/flutter_pannable_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -211,47 +212,50 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                             ),
                           ),
                         ),
-                        Container(
-                          decoration: BoxDecoration(
-                              border: Border(
-                                  bottom:
-                                      BorderSide(color: Colors.grey[400]!))),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Expanded(
-                                    child: Text(
-                                  'Penjual',
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.black,
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.w500),
-                                )),
-                                FutureBuilder(
-                                    future: FirebaseFirestore.instance
-                                        .collection('users')
-                                        .doc(menuData['tenant_id'])
-                                        .get(),
-                                    builder: (context, tenantSnapshot) {
-                                      if (!tenantSnapshot.hasData) {
-                                        return Container();
-                                      } else {
-                                        return Expanded(
-                                            child: Text(
-                                          tenantSnapshot.data!['user_name'],
-                                          style: const TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.black,
-                                              fontFamily: 'Poppins',
-                                              fontWeight: FontWeight.w500),
-                                        ));
-                                      }
-                                    }),
-                              ],
+                        Visibility(
+                          visible: GlobalVar.currentUser.user_role != 'tenant',
+                          child: Container(
+                            decoration: BoxDecoration(
+                                border: Border(
+                                    bottom:
+                                        BorderSide(color: Colors.grey[400]!))),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 5),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Expanded(
+                                      child: Text(
+                                    'Penjual',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.black,
+                                        fontFamily: 'Poppins',
+                                        fontWeight: FontWeight.w500),
+                                  )),
+                                  FutureBuilder(
+                                      future: FirebaseFirestore.instance
+                                          .collection('users')
+                                          .doc(menuData['tenant_id'])
+                                          .get(),
+                                      builder: (context, tenantSnapshot) {
+                                        if (!tenantSnapshot.hasData) {
+                                          return Container();
+                                        } else {
+                                          return Expanded(
+                                              child: Text(
+                                            tenantSnapshot.data!['user_name'],
+                                            style: const TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.black,
+                                                fontFamily: 'Poppins',
+                                                fontWeight: FontWeight.w500),
+                                          ));
+                                        }
+                                      }),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -508,7 +512,8 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                                                                       itemCount:
                                                                           5),
                                                             ),
-                                                            const SizedBox(width: 5),
+                                                            const SizedBox(
+                                                                width: 5),
                                                             Text(
                                                               '(${reviewData[index]['averageRating'].toDouble()})',
                                                               style: TextStyle(
@@ -569,7 +574,8 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                                                         (context, imageIndex) {
                                                       return Padding(
                                                         padding:
-                                                            const EdgeInsets.only(
+                                                            const EdgeInsets
+                                                                .only(
                                                                 right: 10),
                                                         child: GestureDetector(
                                                           onTap: () {
@@ -631,7 +637,8 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                                           ),
                                         );
                                       },
-                                      physics: const NeverScrollableScrollPhysics(),
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
                                       itemCount: reviewData.length,
                                     ),
@@ -648,44 +655,49 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
           },
         ),
       )),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        decoration: const BoxDecoration(color: Colors.white, boxShadow: [
-          BoxShadow(
-              color: Colors.grey,
-              spreadRadius: 2,
-              blurRadius: 5,
-              offset: Offset(0, 3))
-        ]),
-        child: InkWell(
-          onTap: () {
-            m.showBuyModal(context, widget.currentMenu);
-          },
-          child: Container(
-            height: 50,
-            decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-                borderRadius: BorderRadius.circular(8)),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  MdiIcons.cartPlus,
-                  color: Colors.white,
-                ),
-                const SizedBox(
-                  width: 8,
-                ),
-                const Text(
-                  'Tambah Ke Keranjang',
-                  style: TextStyle(fontFamily: 'Poppins', color: Colors.white),
-                )
-              ],
+      bottomNavigationBar: Visibility(
+        visible: GlobalVar.currentUser.user_role != 'tenant',
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          decoration: const BoxDecoration(color: Colors.white, boxShadow: [
+            BoxShadow(
+                color: Colors.grey,
+                spreadRadius: 2,
+                blurRadius: 5,
+                offset: Offset(0, 3))
+          ]),
+          child: InkWell(
+            onTap: () {
+              m.showBuyModal(context, widget.currentMenu);
+            },
+            child: Container(
+              height: 50,
+              decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  borderRadius: BorderRadius.circular(8)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    MdiIcons.cartPlus,
+                    color: Colors.white,
+                  ),
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  const Text(
+                    'Tambah Ke Keranjang',
+                    style:
+                        TextStyle(fontFamily: 'Poppins', color: Colors.white),
+                  )
+                ],
+              ),
             ),
           ),
         ),
       ),
       appBar: AppBar(
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,

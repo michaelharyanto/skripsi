@@ -14,6 +14,7 @@ class TenantHomeFragmentController extends GetxController {
   StreamSubscription<QuerySnapshot>? ss;
   RxInt noStockCount = 0.obs;
   RxInt totalIncome = 0.obs;
+  RxInt orderCount = 0.obs;
   RxList<pesanan> historyList = <pesanan>[].obs;
   String changeGreetings(DateTime time) {
     if (time.hour >= 4 && time.hour <= 10) {
@@ -164,6 +165,15 @@ class TenantHomeFragmentController extends GetxController {
               int.tryParse((data['voucher_value']).toString())!;
         }
       }
+    });
+    FirebaseFirestore.instance
+        .collection('pesanan')
+        .where('tenant_id', isEqualTo: GlobalVar.currentUser.user_id)
+        .where('lastStatus', isEqualTo: 'NEW')
+        .orderBy('created')
+        .snapshots()
+        .listen((event) {
+      orderCount.value = event.size;
     });
   }
 }

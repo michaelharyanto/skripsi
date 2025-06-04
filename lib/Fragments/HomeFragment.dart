@@ -116,6 +116,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                           .collection('menu list')
                           .where('isActive', isEqualTo: true)
                           .orderBy('averageRating', descending: true)
+                          .limit(10)
                           .snapshots(),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
@@ -314,6 +315,7 @@ class _HomeFragmentState extends State<HomeFragment> {
         ],
       )),
       appBar: AppBar(
+        surfaceTintColor: Colors.transparent,
         backgroundColor: Theme.of(context).primaryColor,
         title: GestureDetector(
           child: Container(

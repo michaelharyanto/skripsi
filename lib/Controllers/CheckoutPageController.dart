@@ -7,6 +7,8 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:ntp/ntp.dart';
 import 'package:skripsi/Data%20Model/pesanan.dart';
 import 'package:skripsi/GlobalVar.dart';
+import 'package:skripsi/NotificationService.dart';
+import 'package:skripsi/Pages/HomePage.dart';
 import 'package:skripsi/Widgets/ErrorSnackBar.dart';
 import 'package:skripsi/Widgets/PopUpLoading.dart';
 import 'package:uuid/v4.dart';
@@ -375,8 +377,8 @@ class CheckoutPageController extends GetxController {
       if (tenantData.docs.isEmpty) {
         throw Exception('Tenant not found');
       }
-      var tenantToken = tenantData.docs.first.data().containsKey('dvcid')
-          ? tenantData.docs.first['dvcid']
+      var tenantToken = tenantData.docs.first.data().containsKey('fcm_token')
+          ? tenantData.docs.first['fcm_token']
           : '';
       await FirebaseFirestore.instance.runTransaction((transaction) async {
         List<DocumentSnapshot> menuSnapshots = [];
@@ -468,6 +470,12 @@ class CheckoutPageController extends GetxController {
               'lastUsedVoucher': DateFormat('yyyy-MM-dd HH:mm:ss').format(today)
             },
             SetOptions(merge: true));
+        await NotificationService().sendNotif(
+            tenantToken,
+            docNum,
+            "Mohon Segera Proses Pesanan Baru $docNum",
+            "Hi, ${tenantData.docs.first['user_name']} Ada Pesanan Baru Nih!",
+            'order_baru',null);
       });
       for (var item in ids) {
         // print(item);
@@ -478,7 +486,6 @@ class CheckoutPageController extends GetxController {
             .doc(item);
         await ref.delete();
       }
-      // tambah push fcm
       Get.back();
       AwesomeDialog(
               context: context,
@@ -491,7 +498,13 @@ class CheckoutPageController extends GetxController {
               animType: AnimType.scale)
           .show();
       await Future.delayed(const Duration(seconds: 2));
-      Get.offAllNamed('/homepage');
-    } catch (e) {}
+      Get.offAll(HomePage(animateToIndex: 2));
+      // Get.offAllNamed('/homepage');
+      // await Future.delayed(const Duration(milliseconds: 300));
+      // GlobalVar.appBarKey?.currentState?.animateTo(2);
+      // GlobalVar.currentNavBarIndex.value = 2;
+    } catch (e) {
+      print(e);
+    }
   }
 }
