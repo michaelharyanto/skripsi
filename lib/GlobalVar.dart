@@ -8,6 +8,7 @@ class GlobalVar extends GetxController {
   static RxInt cartCount = 0.obs;
   static String carouselLink = '';
   static String carouselToken = '';
+  static String fcmLink = '';
   static  GlobalKey<ConvexAppBarState>? appBarKey;
   static user currentUser = user(
       phone_number: '',

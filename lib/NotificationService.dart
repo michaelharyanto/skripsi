@@ -4,6 +4,7 @@ import 'package:googleapis_auth/auth_io.dart' as auth;
 import 'package:http/http.dart' as http;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:skripsi/GlobalVar.dart';
 
 class NotificationService {
   static final FlutterLocalNotificationsPlugin plugin =
@@ -73,8 +74,7 @@ class NotificationService {
       String type, String? user_name) async {
     try {
       var authToken = await NotificationService.getAccessToken();
-      const String fcmEndpoint =
-          'https://fcm.googleapis.com/v1/projects/skripsi-79bf8/messages:send';
+      String fcmEndpoint = GlobalVar.fcmLink;
       final Map<String, dynamic> msg = {
         'message': {
           'token': token,

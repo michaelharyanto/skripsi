@@ -59,6 +59,7 @@ Future<void> main() async {
   FirebaseFirestore.instance.collection('API').doc('data').get().then((value) {
     GlobalVar.carouselLink = value.data()!['storageLink'];
     GlobalVar.carouselToken = value.data()!['storageKey'];
+    GlobalVar.fcmLink = value.data()!['fcmLink'];
   });
   runApp(const MyApp());
 }
