@@ -1,9 +1,14 @@
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class AddReviewPageController extends GetxController {
+  RxString selectedImage = ''.obs;
   showReviewModal(BuildContext context, String menu_name) {
     RxDouble value = 0.0.obs;
     TextEditingController reviewTF = TextEditingController();
@@ -133,54 +138,51 @@ class AddReviewPageController extends GetxController {
                           maxLines: 4,
                           keyboardType: TextInputType.multiline,
                         ),
-                        // Center(
-                        //     child: GestureDetector(
-                        //   onTap: () {
-                        //     if (foodRating != null) {
-                        //     } else {
-                        //       selectedImage3.value = '';
-                        //     }
-                        //   },
-                        //   child: Badge(
-                        //     isLabelVisible: (selectedImage3.isNotEmpty &&
-                        //         foodRating == null),
-                        //     textStyle: TextStyle(
-                        //         color: Colors.white,
-                        //         fontWeight: FontWeight.bold),
-                        //     backgroundColor: Colors.red,
-                        //     largeSize: 30,
-                        //     offset: Offset(10, -10),
-                        //     label: Icon(
-                        //       Icons.close,
-                        //       color: Colors.white,
-                        //     ),
-                        //     child: GestureDetector(
-                        //       onTap: () {
-                        //         if (foodRating != null) {
-                        //         } else {
-                        //           pickImage(3, context);
-                        //         }
-                        //       },
-                        //       child: DottedBorder(
-                        //         color: Color(int.parse(
-                        //             "#FF979797".replaceAll('#', ""),
-                        //             radix: 16)),
-                        //         radius: Radius.circular(4),
-                        //         child: Container(
-                        //           width: 111,
-                        //           height: 111,
-                        //           child: foodRating != null
-                        //               ? CachedNetworkImage(
-                        //                   imageUrl: selectedImage3.value)
-                        //               : selectedImage3.value.isNotEmpty
-                        //                   ? Image.file(
-                        //                       File(selectedImage3.value))
-                        //                   : Image.asset('assets/picture.png'),
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ))
+                        Center(
+                            child: GestureDetector(
+                          onTap: () {
+                            
+                              selectedImage.value = '';
+                            
+                          },
+                          child: Badge(
+                            isLabelVisible: (selectedImage.isNotEmpty ),
+                            textStyle: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                            backgroundColor: Colors.red,
+                            largeSize: 30,
+                            offset: Offset(10, -10),
+                            label: Icon(
+                              Icons.close,
+                              color: Colors.white,
+                            ),
+                            child: GestureDetector(
+                              onTap: () {
+                                // pickImage(3, context);
+                              },
+                              child: DottedBorder(
+                                color: Color(int.parse(
+                                    "#FF979797".replaceAll('#', ""),
+                                    radix: 16)),
+                                radius: Radius.circular(4),
+                                child: Container(
+                                  width: 111,
+                                  height: 111,
+                                  child: 
+                                  // foodRating != null
+                                  //     ? CachedNetworkImage(
+                                  //         imageUrl: selectedImage3.value)
+                                  //     : 
+                                      selectedImage.value.isNotEmpty
+                                          ? Image.file(
+                                              File(selectedImage.value))
+                                          : Icon(Icons.add_photo_alternate_rounded),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ))
                       ],
                     )),
               ),
