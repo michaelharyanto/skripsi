@@ -60,6 +60,7 @@ class MenuFragmentController extends GetxController {
         .orderBy('menu_name');
     ss = query.snapshots().listen((event) {
       menuList.clear();
+      lastMenu = null;
       List<menu> tempList = [];
       if (event.docs.isNotEmpty) {
         lastMenu = event.docs.last;

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:skripsi/Controllers/CheckoutPageController.dart';
@@ -18,6 +19,10 @@ class HistoryFragment extends StatefulWidget {
 class _HistoryFragmentState extends State<HistoryFragment> {
   HistoryFragmentController h = Get.put(HistoryFragmentController());
   ScrollController sc = ScrollController();
+  TextEditingController fromTF = TextEditingController();
+  TextEditingController toTF = TextEditingController();
+  RxBool searchToggle = false.obs;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -45,7 +50,10 @@ class _HistoryFragmentState extends State<HistoryFragment> {
                   return Material(
                     child: InkWell(
                       onTap: () {
-                        Get.to(HistoryDetailPage(order_id: order.order_id, detail: order.detail,));
+                        Get.to(HistoryDetailPage(
+                          order_id: order.order_id,
+                          detail: order.detail,
+                        ));
                       },
                       child: Container(
                         color: Colors.grey[300],
@@ -156,7 +164,8 @@ class _HistoryFragmentState extends State<HistoryFragment> {
                                                         ' : ${order.tenant_name}',
                                                     style: const TextStyle(
                                                         color: Colors.black,
-                                                        fontWeight: FontWeight.w500,
+                                                        fontWeight:
+                                                            FontWeight.w500,
                                                         fontFamily: 'Poppins',
                                                         fontSize: 14),
                                                   ),
@@ -239,7 +248,8 @@ class _HistoryFragmentState extends State<HistoryFragment> {
                                                   child: Text(
                                                     '+${order.detail.length - 3} Menu Lainnya',
                                                     style: TextStyle(
-                                                        color: Theme.of(context).primaryColor,
+                                                        color: Theme.of(context)
+                                                            .primaryColor,
                                                         fontWeight:
                                                             FontWeight.w700,
                                                         fontFamily: 'Poppins',
@@ -331,10 +341,10 @@ class _HistoryFragmentState extends State<HistoryFragment> {
         surfaceTintColor: Colors.transparent,
         iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
-        title: const Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
+            const Text(
               'Riwayat Pesanan',
               style: TextStyle(
                   color: Colors.white,
@@ -342,8 +352,158 @@ class _HistoryFragmentState extends State<HistoryFragment> {
                   fontWeight: FontWeight.w500,
                   fontSize: 18),
             ),
+            InkWell(
+              onTap: () {
+                setState(() {
+                  searchToggle.value = !(searchToggle.value);
+                });
+              },
+              child: const Icon(
+                Icons.search,
+                size: 30,
+              ),
+            )
           ],
         ),
+        bottom: PreferredSize(
+            preferredSize: Size.fromHeight(searchToggle.value ? 100 : 0),
+            child: searchToggle.value? Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: FormBuilderDateTimePicker(
+                            name: '',
+                            controller: fromTF,
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Poppins'),
+                            inputType: InputType.date,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(2000),
+                            lastDate: DateTime.now(),
+                            format: DateFormat('dd-MM-yyyy'),
+                            decoration: InputDecoration(
+                                isDense: true,
+                                filled: true,
+                                fillColor: Colors.white,
+                                suffixIcon: InkWell(
+                                  onTap: () {
+                                    fromTF.text = '';
+                                  },
+                                  child: const Icon(
+                                    Icons.close,
+                                    size: 20,
+                                  ),
+                                ),
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 10),
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                    borderSide: const BorderSide(color: Colors.grey)),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                    borderSide:
+                                        BorderSide(color: Colors.blue[400]!)),
+                                labelStyle: TextStyle(
+                                    color: Colors.grey[800],
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 13,
+                                    fontFamily: 'Poppins'),
+                                labelText: 'Tanggal Awal'),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.topRight,
+                            child: FormBuilderDateTimePicker(
+                              name: '',
+                              controller: toTF,
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: 'Poppins'),
+                              inputType: InputType.date,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime.now(),
+                              format: DateFormat('dd-MM-yyyy'),
+                              decoration: InputDecoration(
+                                  isDense: true,
+                                  filled: true,
+                                  suffixIcon: InkWell(
+                                    onTap: () {
+                                      toTF.text = '';
+                                    },
+                                    child: const Icon(
+                                      Icons.close,
+                                      size: 20,
+                                    ),
+                                  ),
+                                  fillColor: Colors.white,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 10),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                      borderSide:
+                                          const BorderSide(color: Colors.grey)),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                      borderSide:
+                                          BorderSide(color: Colors.blue[400]!)),
+                                  labelStyle: TextStyle(
+                                      color: Colors.grey[800],
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 13,
+                                      fontFamily: 'Poppins'),
+                                  labelText: 'Tanggal Akhir'),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: InkWell(
+                      onTap: () {
+                        h.searchHistory(fromTF.text, toTF.text);
+                      },
+                      child: Container(
+                        width: Get.width,
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                            color: Colors.blue[700],
+                            borderRadius: BorderRadius.circular(8)),
+                        child: const Center(
+                          child: Text(
+                            'Cari',
+                            style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.white,
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ):const SizedBox.shrink()),
       ),
     );
   }

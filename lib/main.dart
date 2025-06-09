@@ -68,6 +68,11 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
+    if (MediaQuery.of(context).size.width > 600) {
+      GlobalVar.isTablet = true;
+    } else {
+      GlobalVar.isTablet = false;
+    }
     return KeyboardDismissOnTap(
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
@@ -79,8 +84,15 @@ class MyApp extends StatelessWidget {
           GlobalCupertinoLocalizations.delegate
         ],
         builder: EasyLoading.init(),
-        getPages: [GetPage(name: '/homepage', page: () => const HomePage(animateToIndex: null,))],
+        getPages: [
+          GetPage(
+              name: '/homepage',
+              page: () => const HomePage(
+                    animateToIndex: null,
+                  ))
+        ],
         theme: ThemeData(
+          datePickerTheme: DatePickerThemeData(surfaceTintColor: Colors.transparent),
           primaryColor: Colors.blue[300],
           textSelectionTheme: TextSelectionThemeData(
               cursorColor: Colors.blue[300],
@@ -98,7 +110,6 @@ class MyApp extends StatelessWidget {
 Future<void> handleMessage(RemoteMessage message) async {
   if (message.data['docType'] == 'Chat') {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      
       // Get.to(() => ChatroomPage(
       //     orderID: message.data['documentno'],
       //     userName: message.data['sender']));

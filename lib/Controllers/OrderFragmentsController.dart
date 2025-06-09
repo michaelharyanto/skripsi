@@ -125,6 +125,7 @@ class OrderFragmentsController extends GetxController {
         .where('lastStatus', isEqualTo: 'ONGOING')
         .orderBy('created');
     query.snapshots().listen((event) {
+      lastOrder = null;
       if (event.docs.isNotEmpty) {
         List<pesanan> temp = [];
         historyList.clear();
@@ -284,6 +285,7 @@ class OrderFragmentsController extends GetxController {
         .where('lastStatus', isEqualTo: 'READY')
         .orderBy('created');
     query.snapshots().listen((event) {
+      lastReadyOrder = null;
       if (event.docs.isNotEmpty) {
         List<pesanan> temp = [];
         readyHistoryList.clear();
@@ -470,6 +472,7 @@ class OrderFragmentsController extends GetxController {
                 DateTime.now().day + 1)))
         .orderBy('dateComplete', descending: true);
     query.snapshots().listen((event) {
+      lastCompleteOrder = null;
       if (event.docs.isNotEmpty) {
         List<pesanan> temp = [];
         completeHistoryList.clear();

@@ -498,7 +498,7 @@ class CheckoutPageController extends GetxController {
               animType: AnimType.scale)
           .show();
       await Future.delayed(const Duration(seconds: 2));
-      Get.offAll(HomePage(animateToIndex: 2));
+      Get.offAll(HomePage(animateToIndex: 1));
       // Get.offAllNamed('/homepage');
       // await Future.delayed(const Duration(milliseconds: 300));
       // GlobalVar.appBarKey?.currentState?.animateTo(2);

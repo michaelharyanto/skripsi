@@ -44,7 +44,6 @@ class _HomePageState extends State<HomePage> {
         ];
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (GlobalVar.currentUser.user_role == 'tenant') {
       t.initHistory();
@@ -52,6 +51,7 @@ class _HomePageState extends State<HomePage> {
     } else {
       h.getCarrousel();
       h.getCartCount();
+      h.getTenantList();
     }
     if (widget.animateToIndex != null) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {

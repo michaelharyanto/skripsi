@@ -114,23 +114,31 @@ class _CartPageState extends State<CartPage> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Obx(() => Checkbox(
-                                                    value: currentMenu
-                                                        .checked.value,
-                                                    onChanged: (value) {
-                                                      if (!c
-                                                          .hasOtherCartWithProductsTickedMoreThanOne(
-                                                              index)) {
-                                                        c.menuCheckboxClick(
-                                                            index,
-                                                            menuIndex,
-                                                            value!);
-                                                      }
-                                                    },
-                                                    activeColor:
-                                                        Theme.of(context)
-                                                            .primaryColor,
-                                                  )),
+                                              Obx(() => IgnorePointer(
+                                                ignoring: (menuData[
+                                                                    'menu_stock'] ==
+                                                                0 ||
+                                                            menuData[
+                                                                    'isActive'] ==
+                                                                false),
+                                                child: Checkbox(
+                                                      value: currentMenu
+                                                          .checked.value,
+                                                      onChanged: (value) {
+                                                        if (!c
+                                                            .hasOtherCartWithProductsTickedMoreThanOne(
+                                                                index)) {
+                                                          c.menuCheckboxClick(
+                                                              index,
+                                                              menuIndex,
+                                                              value!);
+                                                        }
+                                                      },
+                                                      activeColor:
+                                                          Theme.of(context)
+                                                              .primaryColor,
+                                                    ),
+                                              )),
                                               SizedBox(
                                                 height: 80,
                                                 width: 80,

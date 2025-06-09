@@ -45,7 +45,8 @@ class AddReviewPage extends StatelessWidget {
                             context,
                             menuData.currentMenu!.menu_name!,
                             menuData.menu_id,
-                            order_id);
+                            order_id,
+                            snapshot.data!.data());
                       },
                       child: Container(
                         decoration: const BoxDecoration(
@@ -216,7 +217,8 @@ class AddReviewPage extends StatelessWidget {
                             context,
                             menuData.currentMenu!.menu_name!,
                             menuData.menu_id,
-                            order_id);
+                            order_id,
+                            snapshot.data!.data());
                       },
                       child: Container(
                         decoration: const BoxDecoration(

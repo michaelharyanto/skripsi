@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_imagekit/flutter_imagekit.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
@@ -16,10 +17,15 @@ import 'package:skripsi/Widgets/PopUpLoading.dart';
 
 class AddReviewPageController extends GetxController {
   RxString selectedImage = ''.obs;
-  showReviewModal(BuildContext context, String menu_name, String menu_id, String order_id) {
+  showReviewModal(BuildContext context, String menu_name, String menu_id,
+      String order_id, dynamic review) {
     selectedImage.value = '';
     RxDouble value = 0.0.obs;
     TextEditingController reviewTF = TextEditingController();
+    if (review != null) {
+      value.value = review['rating'];
+      reviewTF.text = review['comment'];
+    }
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -91,7 +97,7 @@ class AddReviewPageController extends GetxController {
                                     minRating: 0,
                                     direction: Axis.horizontal,
                                     itemCount: 5,
-                                    // ignoreGestures: foodRating != null,
+                                    ignoreGestures: review != null,
                                     unratedColor: Colors.grey,
                                     tapOnlyMode: true,
                                     itemSize: 50,
@@ -118,14 +124,11 @@ class AddReviewPageController extends GetxController {
                           const SizedBox(height: 13),
                           TextFormField(
                             controller: reviewTF,
-                            // readOnly: foodRating != null,
+                            readOnly: review != null,
                             decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Color(int.parse(
-                                          "#FF79747E".replaceAll('#', ""),
-                                          radix: 16)),
-                                      width: 1)),
+                              border: const OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.grey, width: 1)),
                               hintText: '',
                               counterText: '',
                               labelText: '',
@@ -180,20 +183,20 @@ class AddReviewPageController extends GetxController {
                                       ),
                                       child: GestureDetector(
                                         onTap: () {
-                                          pickImage(context);
+                                          if (review == null) {
+                                            pickImage(context);
+                                          }
                                         },
                                         child: DottedBorder(
                                           color: Colors.grey,
                                           radius: const Radius.circular(4),
-                                          child: Container(
+                                          child: SizedBox(
                                             width: 111,
                                             height: 111,
-                                            child:
-                                                // foodRating != null
-                                                //     ? CachedNetworkImage(
-                                                //         imageUrl: selectedImage3.value)
-                                                //     :
-                                                selectedImage.value.isNotEmpty
+                                            child: review != null
+                                                ? CachedNetworkImage(
+                                                    imageUrl: review['image'])
+                                                : selectedImage.value.isNotEmpty
                                                     ? Image.file(File(
                                                         selectedImage.value))
                                                     : const Icon(
@@ -210,38 +213,42 @@ class AddReviewPageController extends GetxController {
                       ),
                     )),
               ),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                decoration:
-                    const BoxDecoration(color: Colors.white, boxShadow: [
-                  BoxShadow(
-                      color: Colors.grey,
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: Offset(0, 3))
-                ]),
-                child: InkWell(
-                  onTap: () async {
-                    DateTime today = await NTP.now();
-                    addMenuReview(context, value.value, reviewTF.text, selectedImage.value, today, order_id, menu_id);
-                  },
-                  child: Container(
-                    height: 50,
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
-                        borderRadius: BorderRadius.circular(8)),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Tambah',
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700),
-                        )
-                      ],
+              Visibility(
+                visible: review == null,
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  decoration:
+                      const BoxDecoration(color: Colors.white, boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey,
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: Offset(0, 3))
+                  ]),
+                  child: InkWell(
+                    onTap: () async {
+                      DateTime today = await NTP.now();
+                      addMenuReview(context, value.value, reviewTF.text,
+                          selectedImage.value, today, order_id, menu_id);
+                    },
+                    child: Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          borderRadius: BorderRadius.circular(8)),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Tambah',
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -271,8 +278,8 @@ class AddReviewPageController extends GetxController {
                     height: 60,
                     decoration: BoxDecoration(
                         color: Theme.of(context).primaryColor,
-                        borderRadius:
-                            const BorderRadius.vertical(top: Radius.circular(20))),
+                        borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(20))),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                           vertical: 16, horizontal: 20),

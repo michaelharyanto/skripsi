@@ -3,10 +3,12 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
+import 'package:skripsi/Data%20Model/user.dart';
 import 'package:skripsi/GlobalVar.dart';
 
 class HomePageController extends GetxController {
   RxList<String> carouselList = <String>[].obs;
+  RxList<user> tenantList = <user>[].obs;
   RxInt carouselIndex = 0.obs;
 
   getCarrousel() async {
@@ -45,5 +47,15 @@ class HomePageController extends GetxController {
         print(e);
       }
     });
+  }
+
+  getTenantList() async {
+    var data = await FirebaseFirestore.instance
+        .collection('users')
+        .where('user_role', isEqualTo: 'tenant')
+        .get();
+    for (var element in data.docs) {
+      tenantList.add(user.fromJson(element.data()));
+    }
   }
 }

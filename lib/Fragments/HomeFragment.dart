@@ -10,10 +10,12 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:carousel_slider/carousel_slider.dart' as cs;
 import 'package:shimmer/shimmer.dart';
 import 'package:skripsi/Controllers/HomePageController.dart';
+import 'package:skripsi/Controllers/TenantHomeFragmentController.dart';
 import 'package:skripsi/Data%20Model/menu.dart';
 import 'package:skripsi/GlobalVar.dart';
 import 'package:skripsi/Pages/CartPage.dart';
 import 'package:skripsi/Pages/MenuDetailPage.dart';
+import 'package:skripsi/Pages/TenantMenuListPage.dart';
 
 class HomeFragment extends StatefulWidget {
   const HomeFragment({super.key});
@@ -24,7 +26,7 @@ class HomeFragment extends StatefulWidget {
 
 class _HomeFragmentState extends State<HomeFragment> {
   HomePageController h = Get.put(HomePageController());
-
+  final colors = [Colors.blue, Colors.green, Colors.red, Colors.yellow];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,6 +93,63 @@ class _HomeFragmentState extends State<HomeFragment> {
           const SizedBox(
             height: 8,
           ),
+          Container(
+            width: double.infinity,
+            height: h.tenantList.length < 6 ? 85 : 170,
+            child: Obx(() => GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: h.tenantList.length < 6 ? 1 : 2,
+                      childAspectRatio: 1,
+                      crossAxisSpacing: 0,
+                      mainAxisSpacing: 0),
+                  itemBuilder: (context, index) {
+                    final row = index ~/ (h.tenantList.length < 6 ? 1 : 2);
+                    final color = colors[row % colors.length];
+                    return Container(
+                      height: 60,
+                      child: InkWell(
+                        child: Column(
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  color: Colors.grey[200],
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Icon(
+                                Icons.person,
+                                color: color,
+                              ),
+                              width: 40,
+                              height: 40,
+                            ),
+                            Text(
+                              h.tenantList[index].user_name,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w700,
+                                  fontFamily: 'Poppins'),
+                            )
+                          ],
+                        ),
+                        onTap: () {
+                          Get.to(MenuListPage(
+                              tenant_id: h.tenantList[index].user_id,
+                              tenant_name: h.tenantList[index].user_name));
+                        },
+                      ),
+                    );
+                  },
+                  itemCount: h.tenantList.length,
+                  scrollDirection: Axis.horizontal,
+                )),
+          ),
+          const SizedBox(
+            height: 8,
+          ),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -115,6 +174,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                       stream: FirebaseFirestore.instance
                           .collection('menu list')
                           .where('isActive', isEqualTo: true)
+                          .where('menu_stock',isNotEqualTo: 0)
                           .orderBy('averageRating', descending: true)
                           .limit(10)
                           .snapshots(),
@@ -317,26 +377,35 @@ class _HomeFragmentState extends State<HomeFragment> {
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
         backgroundColor: Theme.of(context).primaryColor,
-        title: GestureDetector(
-          child: Container(
-            height: 40,
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(8)),
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: const Row(
-              children: [
-                Icon(Icons.search, color: Colors.grey),
-                SizedBox(
-                  width: 5,
-                ),
-                Text(
-                  'Cari',
-                  style: TextStyle(
-                      fontSize: 14, color: Colors.black, fontFamily: 'Poppins'),
-                )
-              ],
-            ),
-          ),
+        title: 
+        // GestureDetector(
+        //   child: Container(
+        //     height: 40,
+        //     decoration: BoxDecoration(
+        //         color: Colors.white, borderRadius: BorderRadius.circular(8)),
+        //     padding: const EdgeInsets.symmetric(horizontal: 5),
+        //     child: const Row(
+        //       children: [
+        //         Icon(Icons.search, color: Colors.grey),
+        //         SizedBox(
+        //           width: 5,
+        //         ),
+        //         Text(
+        //           'Cari',
+        //           style: TextStyle(
+        //               fontSize: 14, color: Colors.black, fontFamily: 'Poppins'),
+        //         )
+        //       ],
+        //     ),
+        //   ),
+        // ),
+        Text(
+          '${TenantHomeFragmentController().changeGreetings(DateTime.now())} ${GlobalVar.currentUser.user_name.split(' ')[0]}',
+          style: const TextStyle(
+              color: Colors.white,
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w500,
+              fontSize: 18),
         ),
         actions: [
           Padding(

@@ -9,7 +9,8 @@ class GlobalVar extends GetxController {
   static String carouselLink = '';
   static String carouselToken = '';
   static String fcmLink = '';
-  static  GlobalKey<ConvexAppBarState>? appBarKey;
+  static GlobalKey<ConvexAppBarState>? appBarKey;
+  static bool isTablet = false;
   static user currentUser = user(
       phone_number: '',
       user_email: '',
